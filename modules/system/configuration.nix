@@ -22,16 +22,62 @@
     extraLocaleSettings.LC_ALL = "en_US.UTF-8";
   };
 
-  # === X11 & GNOME ===========================================================
-  services.xserver = {
+  # === Hyprland Setup ========================================================
+  programs.hyprland = {
     enable = true;
+  };
+  
+  # === Display Manager (greetd + tuigreet) ==================================
+  services.xserver = {
+    enable = true;  # Still needed for input driver support
     libinput.enable = true;  # Touchpad support
-    displayManager.gdm.enable = true;
-    desktopManager.gnome.enable = true;
     xkb = {
       layout = "us";
       variant = "intl";
     };
+  };
+  
+  # Configure greetd with tuigreet
+  services.greetd = {
+    enable = true;
+    settings = {
+      default_session = {
+        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --remember --cmd Hyprland";
+        user = "greeter";
+      };
+    };
+  };
+
+  # === Hyprland Utilities ===================================================
+  environment.systemPackages = with pkgs; [
+    greetd.tuigreet  # Add tuigreet
+    
+    # Core Wayland utilities
+    waybar          # Status bar
+    wofi            # Application launcher
+    wl-clipboard    # Clipboard manager
+    swaylock        # Screen locker
+    swayidle        # Idle management
+    
+    # Useful utilities
+    kitty
+    fuzzel
+    dunst           # Notification daemon
+    networkmanagerapplet
+    brightnessctl   # Brightness control
+    
+    # Screenshots and screen recording
+    grim            # Screenshot utility
+    slurp           # Region selection
+  ];
+
+  # === XDG Desktop Portal (for screen sharing) ==============================
+  xdg.portal = {
+    enable = true;
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-wlr
+      xdg-desktop-portal-gtk
+    ];
   };
 
   # === Sound (PipeWire) ======================================================
@@ -52,7 +98,7 @@
 
   # === Power Management ======================================================
   services.tlp.enable = true;
-  services.power-profiles-daemon.enable = false; # Disable Gnome eco saver
+  services.power-profiles-daemon.enable = false;
   powerManagement.enable = true;
 
   # === Misc ==================================================================
@@ -74,3 +120,4 @@
     shell = pkgs.zsh;
   };
 }
+

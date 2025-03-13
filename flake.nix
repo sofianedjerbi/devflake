@@ -21,9 +21,8 @@
       system = "x86_64-linux";
       specialArgs = { inherit host; };
       modules = [
-        # Use self to reference paths within your flake
         "${self}/modules/system/configuration.nix"
-        "${self}/host/${host}/hardware.nix" # Change on different hardware
+        "${self}/hosts/${host}/hardware.nix"
 
         # Allow unfree packages globally
         { nixpkgs.config.allowUnfree = true; }
@@ -32,6 +31,7 @@
         home.nixosModules.home-manager {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
+          home-manager.backupFileExtension = "backup";
           home-manager.users.sofiane = import "${self}/home.nix";
         }
 

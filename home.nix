@@ -1,5 +1,16 @@
 { config, pkgs, ... }: {
 
+  imports = [
+    ./modules/home/hyprland
+  ];
+
+  myHyprland = {
+    enable = true;
+    wallpaper = "./resources/wallpapers/neon.jpg"; # Change to your wallpaper path
+    terminal = "kitty";  # Your preferred terminal
+    launcher = "fuzzel"; # Your preferred launcher
+  };
+
   # === Home Manager Configuration ============================================
   home.username = "sofiane";
   home.homeDirectory = "/home/sofiane";
