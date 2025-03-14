@@ -1,7 +1,27 @@
-{ config, pkgs, lib, host, ... }: {
-  # === Nix System ============================================================
-  system.stateVersion = "24.11"; 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+{ config, pkgs, lib, hostname ? "framework", username ? "sofiane", ... }: 
+
+let
+  userFullName = "Sofiane Djerbi";
+  locale = "en_US.UTF-8";
+  timeZone = "Europe/Paris";
+in {
+  # === Nix System Settings ===================================================
+  system = {
+    stateVersion = "24.11"; # Do not change after initial setup
+  };
+  
+  nix = {
+    settings = {
+      experimental-features = [ "nix-command" "flakes" ];
+      auto-optimise-store = true;
+    };
+    # Garbage collection settings
+    gc = {
+      automatic = true;
+      dates = "daily";
+      options = "--delete-older-than 14d";
+    };
+  };
 
   # === Bootloader ============================================================
   boot.loader = {
@@ -11,25 +31,26 @@
 
   # === Networking ============================================================
   networking = {
-    hostName = host;
+    hostName = hostname;
     networkmanager.enable = true;
+    # Use DHCP by default
+    useDHCP = lib.mkDefault true;
   };
 
   # === Locale & Timezone =====================================================
-  time.timeZone = "Europe/Paris";
+  time.timeZone = timeZone;
   i18n = {
-    defaultLocale = "en_US.UTF-8";
-    extraLocaleSettings.LC_ALL = "en_US.UTF-8";
+    defaultLocale = locale;
+    extraLocaleSettings.LC_ALL = locale;
   };
 
-  # === Hyprland Setup ========================================================
-  programs.hyprland = {
-    enable = true;
-  };
+  # === Desktop Environment ===================================================
+  # --- Hyprland ---
+  programs.hyprland.enable = true;
   
-  # === Display Manager (greetd + tuigreet) ==================================
+  # --- Display and Input Configuration ---
   services.xserver = {
-    enable = true;  # Still needed for input driver support
+    enable = true;  # Needed for input driver support
     libinput.enable = true;  # Touchpad support
     xkb = {
       layout = "us";
@@ -37,7 +58,7 @@
     };
   };
   
-  # Configure greetd with tuigreet
+  # --- Login Manager ---
   services.greetd = {
     enable = true;
     settings = {
@@ -48,30 +69,33 @@
     };
   };
 
-  # === Hyprland Utilities ===================================================
+  # === Desktop Environment Packages ==========================================
   environment.systemPackages = with pkgs; [
-    greetd.tuigreet  # Add tuigreet
+    # Login manager
+    greetd.tuigreet
     
-    # Core Wayland utilities
+    # Wayland utilities
     waybar          # Status bar
     wofi            # Application launcher
     wl-clipboard    # Clipboard manager
     swaylock        # Screen locker
     swayidle        # Idle management
     
-    # Useful utilities
+    # Terminal and UI
     kitty
     fuzzel
     dunst           # Notification daemon
+    
+    # System utilities
     networkmanagerapplet
     brightnessctl   # Brightness control
     
-    # Screenshots and screen recording
+    # Screen capture
     grim            # Screenshot utility
     slurp           # Region selection
   ];
 
-  # === XDG Desktop Portal (for screen sharing) ==============================
+  # === Screen Sharing Support ===============================================
   xdg.portal = {
     enable = true;
     extraPortals = with pkgs; [
@@ -80,7 +104,7 @@
     ];
   };
 
-  # === Sound (PipeWire) ======================================================
+  # === Audio ================================================================
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -92,32 +116,25 @@
     pulse.enable = true;
   };
 
-  # === Bluetooth =============================================================
+  # === Hardware Management ==================================================
+  # --- Bluetooth ---
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
 
-  # === Power Management ======================================================
+  # --- Power Management ---
   services.tlp.enable = true;
   services.power-profiles-daemon.enable = false;
   powerManagement.enable = true;
 
-  # === Misc ==================================================================
-  programs.zsh.enable = true;
-
-  # === Garbage Collection ====================================================
-  nix.settings.auto-optimise-store = true;
-  nix.gc = {
-    automatic = true;
-    dates = "daily";
-    options = "--delete-older-than 14d";
-  };
-
-  # === User Account ==========================================================
-  users.users.sofiane = {
+  # === User Account =========================================================
+  users.users.${username} = {
     isNormalUser = true;
-    description = "Sofiane Djerbi";
+    description = userFullName;
     extraGroups = [ "networkmanager" "wheel" ];
     shell = pkgs.zsh;
   };
+
+  # Enable ZSH for user shell
+  programs.zsh.enable = true;
 }
 

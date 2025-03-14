@@ -1,72 +1,92 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, lib, username ? "sofiane", ... }: 
 
+let
+  # Define common values to avoid repetition and enable easier changes
+  userFullName = "Sofiane Djerbi";
+  userEmail = "contact@sofianedjerbi.com";
+  homeDir = "/home/${username}";
+in {
   imports = [
     ./modules/home/hyprland
   ];
 
+  # === Hyprland Configuration ================================================
   myHyprland = {
     enable = true;
-    wallpaper = "./resources/wallpapers/neon.jpg"; # Change to your wallpaper path
-    terminal = "kitty";  # Your preferred terminal
-    launcher = "fuzzel"; # Your preferred launcher
+    wallpaper = ./resources/wallpapers/neon.jpg; # Changed to path reference
+    terminal = "kitty";
+    launcher = "fuzzel";
   };
 
   # === Home Manager Configuration ============================================
-  home.username = "sofiane";
-  home.homeDirectory = "/home/sofiane";
-  home.stateVersion = "24.11";
+  home = {
+    inherit username;
+    homeDirectory = homeDir;
+    stateVersion = "24.11"; # Do not change after initial setup
+    
+    # === Essential Packages ===================================================
+    packages = with pkgs; [
+      # Terminal Utilities
+      neofetch
+      neovim
+      zsh
+      git
+      htop
+      bat
+      fzf
+      ripgrep
+      jq
+      wget
+      curl
+      tree
 
-  # === Essential Packages ===================================================
-  home.packages = with pkgs; [
-    # Terminal Tools
-    neofetch
-    neovim
-    zsh
-    git
-    htop
-    bat
-    fzf
-    ripgrep
-    jq
-    wget
-    curl
-    tree
+      # Applications
+      code-cursor
+      brave
+      spotify
+    ];
+    
+    # Environment variables
+    sessionVariables = {
+      EDITOR = "nvim";
+      SHELL = "${pkgs.zsh}/bin/zsh";
+      XDG_SESSION_TYPE = "wayland";
+    };
+  };
 
-    # Applications
-    code-cursor
-    brave
-    spotify
-
-    # Dev Tools
-    # None! Use dev containers or project flakes
-    #gcc
-    #python3
-    #nodejs
-  ];
-
-  # === Enable Zsh ===========================================================
+  # === Program Configurations ================================================
+  
+  # --- Shell Configuration ---
   programs.zsh = {
     enable = true;
     enableCompletion = true;
     syntaxHighlighting.enable = true;
     shellAliases = {
       ll = "ls -lah";
+      update = "sudo nixos-rebuild switch";
+      home-update = "home-manager switch";
     };
   };
 
-  # === Git Configuration ====================================================
+  # --- Git Configuration ---
   programs.git = {
     enable = true;
-    userName = "Sofiane Djerbi";
-    userEmail = "contact@sofianedjerbi.com";
+    userName = userFullName;
+    userEmail = userEmail;
     aliases = {
       co = "checkout";
       ci = "commit";
       st = "status";
+      br = "branch";
+      hist = "log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short";
+    };
+    extraConfig = {
+      init.defaultBranch = "main";
+      pull.rebase = false;
     };
   };
 
-  # === Starship Prompt ======================================================
+  # --- Terminal Prompt ---
   programs.starship = {
     enable = true;
     settings = {
@@ -78,22 +98,14 @@
     };
   };
 
-  # === Bat (Better `cat`) ===================================================
+  # --- Better Tools ---
   programs.bat = {
     enable = true;
     config = { theme = "Dracula"; };
   };
 
-  # === FZF (Fuzzy Finder) ===================================================
   programs.fzf = {
     enable = true;
     enableZshIntegration = true;
-  };
-
-  # === Home Manager Finishing ===============================================
-  home.sessionVariables = {
-    EDITOR = "nvim";
-    SHELL = "${pkgs.zsh}/bin/zsh";
-    XDG_SESSION_TYPE = "wayland";
   };
 }

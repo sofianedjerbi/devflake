@@ -5,24 +5,24 @@ let
   cfg = config.myHyprland;
 in {
   options.myHyprland = {
-    enable = mkEnableOption "Enable my custom Hyprland configuration";
+    enable = mkEnableOption "Enable custom Hyprland configuration";
     
     wallpaper = mkOption {
-      type = types.str;
-      default = "~/Pictures/wallpapers/default.jpg";
-      description = "Path to user wallpaper";
+      type = types.path;
+      description = "Path to wallpaper image";
+      example = "./wallpapers/default.jpg";
     };
     
     terminal = mkOption {
       type = types.str;
       default = "kitty";
-      description = "Default terminal";
+      description = "Default terminal emulator";
     };
     
     launcher = mkOption {
       type = types.str;
       default = "fuzzel";
-      description = "Application launcher";
+      description = "Application launcher program";
     };
   };
 
@@ -56,7 +56,7 @@ in {
           layout = "dwindle";
           
           # For all categories, see https://wiki.hyprland.org/Configuring/Variables/
-          cursor_inactive_timeout = 4;
+          #cursor_inactive_timeout = 4;
         };
         
         # Decoration
@@ -75,11 +75,11 @@ in {
           };
           
           # Shadows
-          drop_shadow = true;
-          shadow_range = 15;
-          shadow_render_power = 2;
-          shadow_offset = "0 5";
-          "col.shadow" = "rgba(00000099)";
+          #drop_shadow = true;
+          #shadow_range = 15;
+          #shadow_render_power = 2;
+          #shadow_offset = "0 5";
+          #"col.shadow" = "rgba(00000099)";
         };
         
         # Animations
@@ -122,7 +122,7 @@ in {
         };
         
         master = {
-          new_is_master = true;
+          #new_is_master = true;
         };
         
         gestures = {

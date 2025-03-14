@@ -1,49 +1,69 @@
 {
-  description = "@sofianedjerbi dev env";
+  description = "Sofiane Djerbi's NixOS configuration";
 
   # === Inputs ================================================================
   inputs = {
+    # Package sources
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    home = {
-            url = "github:nix-community/home-manager";
-            inputs.nixpkgs.follows = "nixpkgs";
+
+    # Home Manager
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
   # === Outputs ===============================================================
-  outputs = { self, nixpkgs, home, ... }:
+  outputs = { self, nixpkgs, home-manager, ... }@inputs:
     let
-      host = "framework";
-    in {
-    
-    # === System Configuration =================================================
-    nixosConfigurations.${host} = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
-      specialArgs = { inherit host; };
-      modules = [
-        "${self}/modules/system/configuration.nix"
-        "${self}/hosts/${host}/hardware.nix"
+      pkgs = nixpkgs.legacyPackages.${system};
+      
+      # Define user parameters
+      username = "sofiane";
+      hostname = "framework";
+      
+      # Helper function to create NixOS configuration
+      mkNixosConfig = { hostname }: nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = { 
+          inherit hostname username;
+          inherit inputs;
+        };
+        modules = [
+          ./modules/system/configuration.nix
+          ./hosts/${hostname}/hardware.nix
 
-        # Allow unfree packages globally
-        { nixpkgs.config.allowUnfree = true; }
+          # Allow unfree packages globally
+          { nixpkgs.config.allowUnfree = true; }
 
-        # Home Manager integration
-        home.nixosModules.home-manager {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.backupFileExtension = "backup";
-          home-manager.users.sofiane = import "${self}/home.nix";
-        }
+          # Home Manager integration
+          home-manager.nixosModules.home-manager {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.${username} = import ./home.nix;
+              backupFileExtension = "backup";
+              extraSpecialArgs = {
+                inherit username;
+                inherit inputs;
+              };
+            };
+          }
+        ];
+      };
+    in {
+      # === System Configuration =================================================
+      nixosConfigurations.${hostname} = mkNixosConfig { inherit hostname; };
 
-      ];
+      # === Home Manager Configuration (Standalone) ==============================
+      homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        modules = [ ./home.nix ];
+        extraSpecialArgs = {
+          inherit username;
+          inherit inputs;
+        };
+      };
     };
-
-    # === Home Manager Configuration (Standalone) ==============================
-    homeConfigurations.sofiane = home.lib.homeManagerConfiguration {
-      pkgs = nixpkgs.legacyPackages.x86_64-linux;
-      modules = [ "${self}/home.nix" ];
-    };
-
-  };
 }
-
