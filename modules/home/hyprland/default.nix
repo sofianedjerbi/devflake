@@ -35,7 +35,7 @@ in {
       settings = {
         # Monitor configuration
         monitor = [
-          ",preferred,auto,1"  # Automatically detect and configure monitors
+          ",preferred,auto,1,bitdepth,10"  # Add bitdepth to save power
         ];
         
         # Set user wallpaper via exec-once
@@ -43,7 +43,7 @@ in {
           "${pkgs.hyprpaper}/bin/hyprpaper"
           "${pkgs.waybar}/bin/waybar"
           "${pkgs.networkmanagerapplet}/bin/nm-applet --indicator"
-          "swayidle -w timeout 300 'swaylock -f' timeout 600 'hyprctl dispatch dpms off' resume 'hyprctl dispatch dpms on' before-sleep 'swaylock -f'"
+          "swayidle -w timeout 120 'hyprctl dispatch dpms off' resume 'hyprctl dispatch dpms on' timeout 180 'swaylock -f' timeout 300 'systemctl suspend' before-sleep 'swaylock -f'"
         ];
         
         # General configuration
@@ -93,11 +93,11 @@ in {
           ];
           
           animation = [
-            "windows, 1, 7, myBezier"
-            "windowsOut, 1, 7, default, popin 80%"
-            "border, 1, 10, default"
-            "fade, 1, 7, default"
-            "workspaces, 1, 6, easeOut, slide"
+            "windows, 1, 5, myBezier"      # Reduced animation time
+            "windowsOut, 1, 5, default, popin 80%"
+            "border, 1, 8, default"
+            "fade, 1, 5, default"          # Faster fading
+            "workspaces, 1, 4, easeOut, slide"
           ];
         };
         
@@ -130,11 +130,16 @@ in {
           workspace_swipe_fingers = 3;
         };
         
+        # System settings
         misc = {
           disable_hyprland_logo = true;
           disable_splash_rendering = true;
           mouse_move_enables_dpms = true;
           key_press_enables_dpms = true;
+          # Power saving options
+          vfr = true;  # Variable refresh rate to save power
+          vrr = 1;     # Enable adaptive sync
+          disable_autoreload = true; # Save CPU cycles by disabling auto-reload
         };
         
         # Window rules
@@ -151,6 +156,7 @@ in {
         
         # Environment variables
         env = [
+          "HYPRGAMEMODE,0"
           "XCURSOR_SIZE,24"
           "QT_QPA_PLATFORMTHEME,qt5ct"
           "QT_QPA_PLATFORM,wayland"
