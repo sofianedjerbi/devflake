@@ -1,6 +1,11 @@
 { config, lib, pkgs, ... }:
 
 {
+  imports = [
+    # Import the Neovim module
+    ../../modules/home/neovim
+  ];
+
   # === Common Home Manager settings for all users ============================
   home.stateVersion = "24.11";
   
@@ -128,4 +133,15 @@
 
   # Silence Home Manager news
   news.display = "silent";
+
+  # Enable Neovim with our custom configuration for all users
+  myNeovim = {
+    enable = true;
+    defaultEditor = true;
+    fontSize = 13;
+    plugins = [
+      "telescope" "lsp" "treesitter" "completion" 
+      "autopairs" "git" "theme" "statusline" "explorer"
+    ];
+  };
 } 

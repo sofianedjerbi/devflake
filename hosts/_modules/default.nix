@@ -87,6 +87,12 @@
     jq
     tree
     
+    # Development tools
+    gcc # Required for compiling some plugins
+    gnumake
+    nixpkgs-fmt # Nix formatting
+    nodePackages.nodejs # For LSP servers
+    
     # System maintenance
     smartmontools  # Check drive health
     pciutils       # lspci command
