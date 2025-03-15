@@ -142,6 +142,9 @@ in {
           "float, ^(pavucontrol)$"
           "float, ^(nm-connection-editor)$"
           "float, ^(blueman-manager)$"
+          "float, ^(yazi)$"
+          "size 80% 80%, ^(yazi)$"
+          "center, ^(yazi)$"
           "opacity 0.9, ^(Alacritty)$"
           "opacity 0.9, ^(kitty)$"
         ];
@@ -171,7 +174,7 @@ in {
           "$mainMod, Return, exec, $terminal"
           "$mainMod, Q, killactive,"
           "$mainMod SHIFT, Q, exit,"
-          "$mainMod, E, exec, dolphin"
+          "$mainMod, E, exec, $terminal --class yazi -e yazi"
           "$mainMod, F, togglefloating,"
           "$mainMod, Space, exec, $launcher"
           "$mainMod, L, exec, swaylock"
@@ -272,8 +275,8 @@ in {
       # Terminal
       kitty
       
-      # File manager
-      xfce.thunar
+      # File manager - using Yazi instead of Thunar
+      yazi
       
       # Audio control
       pavucontrol
