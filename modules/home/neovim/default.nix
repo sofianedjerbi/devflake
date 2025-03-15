@@ -66,7 +66,7 @@ in {
       extraPackages = with pkgs; [
         # Languages and LSP servers
         nodePackages.typescript
-        nodePackages.typescript-language-server
+        nodePackages.typescript-language-server # TypeScript LSP
         gopls
         rust-analyzer
         lua-language-server
@@ -386,7 +386,7 @@ in {
               require('mason-lspconfig').setup({
                 ensure_installed = {
                   'lua_ls',
-                  'tsserver',
+                  'typescript-language-server',
                   'bashls',
                   'gopls',
                   'rust_analyzer',
@@ -463,12 +463,18 @@ in {
               
               -- Set up all other servers without custom settings
               for _, server in ipairs({
-                'tsserver', 'bashls', 'gopls', 'rust_analyzer', 'pyright'
+                'bashls', 'gopls', 'rust_analyzer', 'pyright'
               }) do 
                 lspconfig[server].setup({
                   capabilities = capabilities,
                 })
               end
+              
+              -- TypeScript setup (use tsserver identifier for lspconfig)
+              lspconfig.tsserver.setup({
+                capabilities = capabilities,
+                filetypes = { "typescript", "javascript", "typescriptreact", "javascriptreact", "typescript.tsx" },
+              })
             end,
           },
           ''}
