@@ -56,17 +56,7 @@
           (./hosts + "/${hostname}/default.nix")
           
           # Home Manager integration
-          home-manager.nixosModules.home-manager {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              extraSpecialArgs = { 
-                inherit hostname inputs;
-                hostPath = ./hosts + "/${hostname}";
-                usersPath = ./users;
-              };
-            };
-          }
+          home-manager.nixosModules.home-manager
         ];
       };
 

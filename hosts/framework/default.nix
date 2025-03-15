@@ -1,12 +1,6 @@
 { config, pkgs, lib, hostname, inputs, usersPath, ... }:
 
-let
-  # Define enabled users for this host
-  enabledUsers = [
-    "sofiane"
-    # Add other users as needed
-  ];
-in {
+{
   imports = [
     # Import system configuration
     ../../modules/system/configuration.nix
@@ -16,26 +10,11 @@ in {
   networking.hostName = hostname;
 
   # === User Configuration ====================================================
-  # Configure the users enabled on this host
-  home-manager = {
-    # Simply specify which users are enabled on this host
-    users = lib.genAttrs enabledUsers (username: {
-      # Import the user's configuration file
-      imports = [ (usersPath + "/${username}/default.nix") ];
-      
-      # Pass the username parameter to the module
-      _module.args = { inherit username; };
-      
-      # User identity - these are required for proper Home Manager operation
-      home.username = username;
-      home.homeDirectory = "/home/${username}";
-      # Note: home.stateVersion is set in users/_modules/default.nix
-    });
-    
-    extraSpecialArgs = {
-      inherit inputs hostname usersPath;
-    };
-  };
+  # Define which users are enabled on this host
+  devflake.enabledUsers = [
+    "sofiane"
+    # Add other users as needed
+  ];
 
   # Configure system users
   users.users.sofiane = {

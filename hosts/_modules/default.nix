@@ -1,6 +1,12 @@
 { config, pkgs, lib, ... }:
 
 {
+  imports = [
+    # Import common options and home-manager configuration
+    ./options.nix
+    ./home-manager.nix
+  ];
+
   # === Common NixOS settings for all hosts ===================================
   
   # Base system configuration 
