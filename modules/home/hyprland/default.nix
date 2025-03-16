@@ -27,8 +27,6 @@ in {
     ../waybar
     # Import our custom Kitty module
     ../kitty
-    # Import our custom Fuzzel module
-    ../fuzzel
   ];
 
   options.myHyprland = {
@@ -63,12 +61,6 @@ in {
     # Enable our custom Kitty configuration
     myKitty = {
       enable = true;
-    };
-    
-    # Enable our custom Fuzzel configuration
-    myFuzzel = {
-      enable = true;
-      terminal = cfg.terminal;
     };
     
     # Enable Hyprland

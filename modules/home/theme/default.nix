@@ -3,92 +3,52 @@
 with lib;
 let
   cfg = config.myTheme;
-  
-  # Define all themes here so they can be applied consistently across all modules
-  themes = {
-    dracula = {
-      background = "282a36";
-      currentLine = "44475a";
-      foreground = "f8f8f2";
-      comment = "6272a4";
-      cyan = "8be9fd";
-      green = "50fa7b";
-      orange = "ffb86c";
-      pink = "ff79c6";
-      purple = "bd93f9";
-      red = "ff5555";
-      yellow = "f1fa8c";
-      
-      # Terminal-specific colors (for kitty, alacritty, etc)
-      terminal = {
-        black = "21222c";
-        brightBlack = "6272a4";
-        white = "f8f8f2";
-        brightWhite = "f8f8f2";
-      };
-    };
-    
-    nord = {
-      background = "2e3440";
-      currentLine = "3b4252";
-      foreground = "eceff4";
-      comment = "4c566a"; 
-      cyan = "88c0d0";
-      green = "a3be8c";
-      orange = "d08770";
-      pink = "b48ead";
-      purple = "b48ead";
-      red = "bf616a";
-      yellow = "ebcb8b";
-      
-      # Terminal-specific colors
-      terminal = {
-        black = "3b4252";
-        brightBlack = "4c566a";
-        white = "e5e9f0";
-        brightWhite = "eceff4";
-      };
-    };
-    
-    "catppuccin-mocha" = {
-      background = "1e1e2e";
-      currentLine = "313244";
-      foreground = "cdd6f4";
-      comment = "6c7086";
-      cyan = "89dceb";
-      green = "a6e3a1";
-      orange = "fab387";
-      pink = "f5c2e7";
-      purple = "cba6f7";
-      red = "f38ba8";
-      yellow = "f9e2af";
-      
-      # Terminal-specific colors
-      terminal = {
-        black = "45475a";
-        brightBlack = "585b70";
-        white = "bac2de";
-        brightWhite = "a6adc8";
-        cursor = "f5e0dc";
-      };
-    };
-  };
-  
-  # The active theme colors
-  activeTheme = themes.${cfg.name};
 in {
   options.myTheme = {
-    enable = mkEnableOption "Enable central theme configuration";
+    enable = mkEnableOption "Enable Catppuccin theme integration";
     
-    name = mkOption {
-      type = types.enum (builtins.attrNames themes);
-      default = "dracula";
-      description = "Theme to use";
+    flavor = mkOption {
+      type = types.enum [ "mocha" "macchiato" "frappe" "latte" ];
+      default = "mocha";
+      description = "Catppuccin flavor to use";
+    };
+    
+    accent = mkOption {
+      type = types.enum [ 
+        "rosewater" "flamingo" "pink" "mauve" "red" "maroon" 
+        "peach" "yellow" "green" "teal" "sky" "sapphire"
+        "blue" "lavender" "text" 
+      ];
+      default = "mauve";
+      description = "Catppuccin accent color";
     };
   };
 
   config = mkIf cfg.enable {
-    # Export colors to be used by other modules
-    _module.args.themeColors = activeTheme;
+    # Enable the official Catppuccin module with our settings
+    catppuccin = {
+      enable = true;
+      flavor = cfg.flavor;
+      accent = cfg.accent;
+      
+      # Enable all the supported applications
+      alacritty.enable = true;
+      bat.enable = true;
+      btop.enable = true;
+      cava.enable = true;
+      dunst.enable = true;
+      fish.enable = true;
+      foot.enable = true;
+      fuzzel.enable = true;
+      hyprland.enable = true;
+      kitty.enable = true;
+      neovim.enable = true;
+      rofi.enable = true;
+      starship.enable = true;
+      swaylock.enable = true;
+      waybar.enable = true;
+      wlogout.enable = true;
+      zsh-syntax-highlighting.enable = true;
+    };
   };
 } 

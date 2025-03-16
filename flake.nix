@@ -11,10 +11,16 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    
+    # Catppuccin theme integration
+    catppuccin = {
+      url = "github:catppuccin/nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   # === Outputs ===============================================================
-  outputs = { self, nixpkgs, home-manager, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, catppuccin, ... }@inputs:
     let
       # Helper function for systems
       forAllSystems = nixpkgs.lib.genAttrs [ "x86_64-linux" "aarch64-linux" ];
@@ -55,6 +61,9 @@
           # Host-specific configuration
           (./hosts + "/${hostname}/default.nix")
           
+          # Catppuccin theme
+          catppuccin.nixosModules.catppuccin
+          
           # Home Manager integration
           home-manager.nixosModules.home-manager
         ];
@@ -81,6 +90,9 @@
               
               # User-specific configuration
               (./users + "/${username}/default.nix")
+              
+              # Catppuccin theme
+              catppuccin.homeManagerModules.catppuccin
             ];
           })
         users;

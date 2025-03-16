@@ -31,9 +31,6 @@ in {
     # Import common user settings
     ../_modules/default.nix
     
-    # Import theme configuration
-    ../../modules/home/theme
-    
     # Import hyprland configuration
     ../../modules/home/hyprland
     
@@ -47,7 +44,8 @@ in {
   # === Theme Configuration ==================================================
   myTheme = {
     enable = true;
-    name = "catppuccin-mocha";
+    flavor = "mocha";  # mocha, macchiato, frappe, or latte
+    accent = "mauve";  # One of the Catppuccin accent colors
   };
 
   # === Basic User Information ================================================
@@ -61,6 +59,7 @@ in {
       code-cursor
       brave
       spotify
+      fuzzel  # Now managed by Catppuccin's module
     ];
     
     # Environment variables
@@ -95,23 +94,6 @@ in {
       # Any additional custom settings can go here
       cursor_blink_interval = "0.5";
       cursor_shape = "beam";
-    };
-  };
-  
-  # === Fuzzel Configuration =================================================
-  myFuzzel = {
-    enable = true;
-    font = "JetBrains Mono";
-    fontSize = 12;
-    width = 35;
-    borderRadius = 10;
-    backgroundOpacity = "ee";  # ~93% opacity
-    showIcons = false;         # Elegant look without icons
-    animation = "zoom";
-    extraConfig = {
-      main = {
-        prompt = "❯ ";         # Simple prompt character
-      };
     };
   };
   
@@ -175,7 +157,4 @@ in {
       git_branch = { symbol = "🌱 "; };
     };
   };
-  
-  # === Neovim Theme Override ================================================
-  myNeovim.theme = "catppuccin";
 } 
