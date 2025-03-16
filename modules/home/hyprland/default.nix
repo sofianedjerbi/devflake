@@ -11,8 +11,6 @@ in {
     ../kitty
     # Import our custom Fuzzel module
     ../fuzzel
-    # Import our custom Dunst module
-    ../dunst
   ];
 
   options.myHyprland = {
@@ -53,11 +51,6 @@ in {
     myFuzzel = {
       enable = true;
       terminal = cfg.terminal;
-    };
-    
-    # Enable our custom Dunst configuration
-    myDunst = {
-      enable = true;
     };
     
     # Enable Hyprland with Catppuccin theming
@@ -315,5 +308,11 @@ in {
     programs.swaylock = {
       enable = true;
     };
+    
+    # Make sure we have dunst installed
+    home.packages = with pkgs; [
+      dunst
+      libcanberra-tools # For notification sounds
+    ];
   };
 }

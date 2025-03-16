@@ -24,9 +24,6 @@ in {
     
     # Import fuzzel configuration
     ../../modules/home/fuzzel
-    
-    # Import dunst configuration
-    ../../modules/home/dunst
   ];
 
   # === Basic User Information ================================================
@@ -94,17 +91,68 @@ in {
   };
   
   # === Dunst Configuration ==================================================
-  myDunst = {
+  services.dunst = {
     enable = true;
-    width = 300;
-    height = 300;
-    position = "top-right";
-    browser = "${pkgs.brave}/bin/brave";
-    sound = {
-      enable = true;
-      low = "/usr/share/sounds/freedesktop/stereo/message-new-instant.oga";
-      normal = "/usr/share/sounds/freedesktop/stereo/message.oga";
-      critical = "/usr/share/sounds/freedesktop/stereo/dialog-warning.oga";
+    
+    # Let Catppuccin module handle colors and styling
+    # We just set structural configuration
+    settings = {
+      global = {
+        width = 300;
+        height = 300;
+        offset = "15x15";
+        origin = "top-right";
+        transparency = 10;
+        frame_width = 2;
+        corner_radius = 10;
+        
+        font = "JetBrains Mono 10";
+        line_height = 4;
+        markup = "full";
+        format = "<b>%s</b>\n%b";
+        alignment = "left";
+        vertical_alignment = "center";
+        show_age_threshold = 60;
+        word_wrap = true;
+        
+        stack_duplicates = true;
+        hide_duplicate_count = false;
+        
+        show_indicators = false;
+        
+        min_icon_size = 0;
+        max_icon_size = 64;
+        
+        title = "Dunst";
+        class = "Dunst";
+        
+        # Set default browser for URLs
+        browser = "${pkgs.brave}/bin/brave";
+        
+        # Mouse actions
+        mouse_left_click = "close_current";
+        mouse_middle_click = "do_action, close_current";
+        mouse_right_click = "close_all";
+      };
+      
+      # Urgency settings retain timeouts but colors are managed by Catppuccin
+      urgency_low = {
+        timeout = 4;
+        highlight = "none";
+        script = "/run/current-system/sw/bin/canberra-gtk-play -f /usr/share/sounds/freedesktop/stereo/message-new-instant.oga";
+      };
+      
+      urgency_normal = {
+        timeout = 8;
+        highlight = "none";
+        script = "/run/current-system/sw/bin/canberra-gtk-play -f /usr/share/sounds/freedesktop/stereo/message.oga";
+      };
+      
+      urgency_critical = {
+        timeout = 0;  # Don't time out
+        highlight = "none";
+        script = "/run/current-system/sw/bin/canberra-gtk-play -f /usr/share/sounds/freedesktop/stereo/dialog-warning.oga";
+      };
     };
   };
 
