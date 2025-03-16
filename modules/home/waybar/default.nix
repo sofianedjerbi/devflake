@@ -17,148 +17,18 @@ in {
   config = mkIf cfg.enable {
     # Install Waybar and dependencies
     home.packages = with pkgs; [
-      waybar
       font-awesome # For icons
       nerd-fonts.jetbrains-mono # Using the new namespace
       nerd-fonts.fira-code
     ];
     
-    # Configure Waybar
+    # Configure Waybar - let Catppuccin handle styling
     programs.waybar = {
       enable = true;
       systemd.enable = true; # Manage Waybar through systemd
       
-      style = ''
-        * {
-          font-family: "JetBrains Mono Nerd Font", "Font Awesome 6 Free";
-          font-size: 13px;
-          font-weight: bold;
-          transition-property: background-color;
-          transition-duration: 0.3s;
-        }
-        
-        window#waybar {
-          background-color: @surface0;
-          color: @text;
-          margin: 0;
-          border-radius: 0;
-        }
-        
-        window#waybar.hidden {
-          opacity: 0.2;
-        }
-        
-        #window {
-          padding-left: 16px;
-          padding-right: 16px;
-          transition: none;
-          color: @text;
-        }
-        
-        #workspaces {
-          margin-left: 8px;
-          background: transparent;
-          transition: none;
-        }
-        
-        #workspaces button {
-          transition: none;
-          color: @text;
-          background: transparent;
-          padding: 5px;
-          font-weight: bolder;
-        }
-        
-        #workspaces button.active {
-          color: @mauve;
-          background: @surface1;
-          border-radius: 8px;
-        }
-        
-        #workspaces button:hover {
-          color: @rosewater;
-          border-radius: 8px;
-        }
-        
-        #battery,
-        #cpu,
-        #memory,
-        #disk,
-        #temperature,
-        #network,
-        #pulseaudio,
-        #clock,
-        #tray,
-        #backlight,
-        #bluetooth,
-        #custom-power,
-        #custom-notification {
-          padding-left: 16px;
-          padding-right: 16px;
-          transition: none;
-          color: @text;
-        }
-        
-        #tray {
-          margin-right: 8px;
-        }
-        
-        #workspaces {
-          padding-right: 4px;
-          padding-left: 4px;
-        }
-        
-        #clock {
-          color: @lavender;
-        }
-        
-        #network {
-          color: @blue; 
-        }
-        
-        #pulseaudio {
-          color: @teal;
-        }
-        
-        #battery {
-          color: @green;
-        }
-        
-        #battery.warning {
-            color: @yellow;
-        }
-        
-        #battery.critical {
-            color: @red;
-        }
-        
-        #cpu {
-          color: @mauve;
-        }
-        
-        #memory {
-          color: @sky;
-        }
-        
-        #temperature {
-          color: @peach;
-        }
-        
-        #bluetooth {
-          color: @blue;
-        }
-        
-        #backlight {
-          color: @yellow;
-        }
-        
-        #custom-power {
-          color: @red;
-          margin-right: 8px;
-        }
-      '';
-      
-      # Waybar configuration
+      # Just define layout and functional elements
+      # Catppuccin module will handle theming
       settings.mainBar = {
         position = cfg.position;
         layer = "top";
@@ -258,8 +128,8 @@ in {
           interval = 2;
           hwmon-path-abs = "/sys/devices/platform/coretemp.0/hwmon";
           input-filename = "temp1_input";
-          format = "󰔏 {temperatureC}°C";
-          format-critical = "󱃂 {temperatureC}°C";
+          format = " {temperatureC}°C";
+          format-critical = " {temperatureC}°C";
           tooltip = false;
         };
         

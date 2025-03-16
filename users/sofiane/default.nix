@@ -24,6 +24,9 @@ in {
     
     # Import fuzzel configuration
     ../../modules/home/fuzzel
+    
+    # Import dunst configuration
+    ../../modules/home/dunst
   ];
 
   # === Basic User Information ================================================
@@ -50,7 +53,7 @@ in {
   # === Hyprland Configuration ================================================
   myHyprland = {
     enable = true;
-    wallpaper = ../../resources/wallpapers/neon.jpg;
+    wallpaper = ../../resources/wallpapers/nixos.png;
     terminal = "kitty";
     launcher = "fuzzel";
   };
@@ -90,8 +93,20 @@ in {
     };
   };
   
-  # === Notification Configuration ============================================
-  services.dunst.enable = true;
+  # === Dunst Configuration ==================================================
+  myDunst = {
+    enable = true;
+    width = 300;
+    height = 300;
+    position = "top-right";
+    browser = "${pkgs.brave}/bin/brave";
+    sound = {
+      enable = true;
+      low = "/usr/share/sounds/freedesktop/stereo/message-new-instant.oga";
+      normal = "/usr/share/sounds/freedesktop/stereo/message.oga";
+      critical = "/usr/share/sounds/freedesktop/stereo/dialog-warning.oga";
+    };
+  };
 
   # === User-specific Configurations ==========================================
   

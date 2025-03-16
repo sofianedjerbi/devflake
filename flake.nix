@@ -64,11 +64,11 @@
           # Catppuccin theme (globally configured)
           catppuccin.nixosModules.catppuccin
           {
-            # Global Catppuccin theme configuration (set for all NixOS modules)
+            # Global Catppuccin theme configuration
             catppuccin = {
+              enable = true;
               flavor = "mocha";
               accent = "mauve";
-              enable = true;
             };
           }
           
@@ -102,11 +102,16 @@
               # Catppuccin theme (globally configured)
               catppuccin.homeManagerModules.catppuccin
               {
-                # Global Catppuccin theme configuration (set for all home-manager modules)
+                # Global Catppuccin theme configuration
                 catppuccin = {
-                  flavor = "mocha";
-                  accent = "mauve";
+                  # Enable Catppuccin for all supported programs
                   enable = true;
+                  
+                  # Default flavor (can be overridden by users)
+                  flavor = "mocha";
+                  
+                  # Default accent color
+                  accent = "mauve";
                 };
               }
             ];

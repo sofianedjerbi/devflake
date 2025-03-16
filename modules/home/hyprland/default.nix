@@ -11,6 +11,8 @@ in {
     ../kitty
     # Import our custom Fuzzel module
     ../fuzzel
+    # Import our custom Dunst module
+    ../dunst
   ];
 
   options.myHyprland = {
@@ -53,7 +55,12 @@ in {
       terminal = cfg.terminal;
     };
     
-    # Enable Hyprland
+    # Enable our custom Dunst configuration
+    myDunst = {
+      enable = true;
+    };
+    
+    # Enable Hyprland with Catppuccin theming
     wayland.windowManager.hyprland = {
       enable = true;
       systemd.enable = true;
@@ -67,7 +74,6 @@ in {
         # Set user wallpaper via exec-once
         exec-once = [
           "${pkgs.hyprpaper}/bin/hyprpaper"
-          # We remove waybar from here since it's now managed by Home Manager through our module
           "${pkgs.networkmanagerapplet}/bin/nm-applet --indicator"
           "swayidle -w timeout 120 'hyprctl dispatch dpms off' resume 'hyprctl dispatch dpms on' timeout 180 'swaylock -f' timeout 300 'systemctl suspend' before-sleep 'swaylock -f'"
         ];
@@ -78,6 +84,7 @@ in {
           gaps_out = 10;
           border_size = 2;
           layout = "dwindle";
+          # Let Catppuccin handle border colors
         };
         
         # Decoration
@@ -95,14 +102,15 @@ in {
             ignore_opacity = true;
           };
           
-          # Shadows - using the correct Hyprland property names
+          # Shadows - let Catppuccin handle colors
           shadow = {
             enabled = true;
-            render_power = 2; 
-            range = 15; 
-            offset = "0 5"; 
-            color = "rgba(11, 11, 11, 0.8)"; 
+            size = 15;
+            offset = "0 5";
           };
+
+          # Add a drop shadow for windows
+          drop_shadow = true;
         };
         
         # Animations
@@ -285,7 +293,6 @@ in {
     home.packages = with pkgs; [
       # Core tools for Hyprland
       hyprpaper
-      # waybar - Removed from here since it's now managed by our waybar module
       networkmanagerapplet
       
       # Screenshot & utilities
@@ -297,9 +304,6 @@ in {
       swaylock
       swayidle
       
-      # Notification
-      dunst
-      
       # File manager - using Yazi instead of Thunar
       yazi
       
@@ -307,7 +311,7 @@ in {
       pavucontrol
     ];
     
-    # Set up Swaylock with Catppuccin colors
+    # Set up Swaylock - Catppuccin module will handle theming
     programs.swaylock = {
       enable = true;
     };
