@@ -95,15 +95,17 @@ in {
             ignore_opacity = true;
           };
           
-          # Shadows - let Catppuccin handle colors
+          # Shadow configuration
           shadow = {
             enabled = true;
-            size = 15;
+            range = 15;
+            render_power = 3;
+            sharp = false;
+            ignore_window = true;
             offset = "0 5";
+            scale = 1.0;
+            # Colors handled by Catppuccin theme
           };
-
-          # Add a drop shadow for windows
-          drop_shadow = true;
         };
         
         # Animations
@@ -282,7 +284,7 @@ in {
       ipc = off
     '';
     
-    # Ensure we have the necessary tools installed - combined with dunst packages
+    # Ensure we have the necessary tools installed
     home.packages = with pkgs; [
       # Core tools for Hyprland
       hyprpaper
@@ -305,7 +307,7 @@ in {
       
       # Notification system
       dunst
-      libcanberra-tools # For notification sounds
+      libcanberra # For notification sounds
     ];
     
     # Set up Swaylock - Catppuccin module will handle theming

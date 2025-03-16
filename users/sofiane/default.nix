@@ -139,19 +139,19 @@ in {
       urgency_low = {
         timeout = 4;
         highlight = "none";
-        script = "/run/current-system/sw/bin/canberra-gtk-play -f /usr/share/sounds/freedesktop/stereo/message-new-instant.oga";
+        script = "${pkgs.libcanberra}/bin/canberra-gtk-play -f /usr/share/sounds/freedesktop/stereo/message-new-instant.oga";
       };
       
       urgency_normal = {
         timeout = 8;
         highlight = "none";
-        script = "/run/current-system/sw/bin/canberra-gtk-play -f /usr/share/sounds/freedesktop/stereo/message.oga";
+        script = "${pkgs.libcanberra}/bin/canberra-gtk-play -f /usr/share/sounds/freedesktop/stereo/message.oga";
       };
       
       urgency_critical = {
         timeout = 0;  # Don't time out
         highlight = "none";
-        script = "/run/current-system/sw/bin/canberra-gtk-play -f /usr/share/sounds/freedesktop/stereo/dialog-warning.oga";
+        script = "${pkgs.libcanberra}/bin/canberra-gtk-play -f /usr/share/sounds/freedesktop/stereo/dialog-warning.oga";
       };
     };
   };
