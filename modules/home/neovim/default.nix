@@ -68,7 +68,8 @@ in {
         which-key-nvim
         
         # Conditional plugins based on the plugins list
-        (lib.mkIf (builtins.elem "theme" cfg.plugins) tokyonight-nvim)
+        (lib.mkIf (builtins.elem "theme" cfg.plugins && cfg.theme == "tokyonight") tokyonight-nvim)
+        (lib.mkIf (builtins.elem "theme" cfg.plugins && cfg.theme == "catppuccin") catppuccin-nvim)
         (lib.mkIf (builtins.elem "statusline" cfg.plugins) lualine-nvim)
         (lib.mkIf (builtins.elem "telescope" cfg.plugins) telescope-nvim)
         (lib.mkIf (builtins.elem "treesitter" cfg.plugins) {
@@ -114,9 +115,38 @@ in {
         vim.keymap.set('n', '<leader>w', '<cmd>write<cr>', { desc = 'Save' })
         vim.keymap.set('n', '<leader>q', '<cmd>quit<cr>', { desc = 'Quit' })
         
-        -- Plugin configurations based on enabled plugins
         ${lib.optionalString (builtins.elem "theme" cfg.plugins) ''
-        -- Theme
+        -- Theme configuration
+        ${if cfg.theme == "catppuccin" then ''
+        require('catppuccin').setup({
+          flavour = "mocha", -- latte, frappe, macchiato, mocha
+          term_colors = true,
+          transparent_background = false,
+          no_italic = false,
+          no_bold = false,
+          styles = {
+            comments = { "italic" },
+            conditionals = { "italic" },
+            loops = {},
+            functions = {},
+            keywords = {},
+            strings = {},
+            variables = {},
+            numbers = {},
+            booleans = {},
+            properties = {},
+            types = {},
+            operators = {}
+          },
+          integrations = {
+            cmp = true,
+            gitsigns = true,
+            telescope = true,
+            which_key = true,
+            treesitter = true
+          }
+        })
+        '' else ""}
         vim.cmd('colorscheme ${cfg.theme}')
         ''}
         
@@ -125,9 +155,9 @@ in {
         require('lualine').setup {
           options = {
             icons_enabled = true,
-            theme = '${cfg.theme}',
+            theme = '${if cfg.theme == "catppuccin" then "catppuccin" else cfg.theme}',
             component_separators = "",
-            section_separators = "",
+            section_separators = ""
           }
         }
         ''}
@@ -153,11 +183,9 @@ in {
         
         -- Use typescript-language-server instead of deprecated tsserver
         lspconfig.typescript_language_server.setup{
-          filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+          filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" }
         }
         ''}
-        
-        -- Rest of configuration is managed by the plugins section of Neovim config
         
         ${lib.optionalString (builtins.elem "completion" cfg.plugins) ''
         -- Completion
@@ -165,13 +193,13 @@ in {
         cmp.setup {
           mapping = cmp.mapping.preset.insert({
             ['<C-Space>'] = cmp.mapping.complete(),
-            ['<CR>'] = cmp.mapping.confirm({ select = true }),
+            ['<CR>'] = cmp.mapping.confirm({ select = true })
           }),
           sources = {
             { name = 'nvim_lsp' },
             { name = 'buffer' },
-            { name = 'path' },
-          },
+            { name = 'path' }
+          }
         }
         ''}
         
