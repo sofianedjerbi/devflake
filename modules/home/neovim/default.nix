@@ -27,9 +27,20 @@ in {
     };
     
     theme = mkOption {
-      type = types.str;
+      type = types.enum [
+        "tokyonight"  # Default
+        "catppuccin"
+        "nord"
+        "gruvbox"
+        "dracula"
+        "onedark"
+        "nightfox"
+        "everforest"
+        # Add more themes here as they are supported
+      ];
       default = "tokyonight";
-      description = "Colorscheme to use";
+      description = "Colorscheme to use for Neovim";
+      example = "catppuccin";
     };
     
     userConfig = mkOption {
@@ -67,9 +78,19 @@ in {
         plenary-nvim
         which-key-nvim
         
-        # Conditional plugins based on the plugins list
-        (lib.mkIf (builtins.elem "theme" cfg.plugins && cfg.theme == "tokyonight") tokyonight-nvim)
-        (lib.mkIf (builtins.elem "theme" cfg.plugins && cfg.theme == "catppuccin") catppuccin-nvim)
+        # Add all supported themes so users can switch between them
+        (lib.mkIf (builtins.elem "theme" cfg.plugins) (
+          if cfg.theme == "tokyonight" then tokyonight-nvim
+          else if cfg.theme == "catppuccin" then catppuccin-nvim
+          else if cfg.theme == "nord" then nord-nvim
+          else if cfg.theme == "gruvbox" then gruvbox-nvim
+          else if cfg.theme == "dracula" then dracula-vim
+          else if cfg.theme == "onedark" then onedark-nvim
+          else if cfg.theme == "nightfox" then nightfox-nvim
+          else if cfg.theme == "everforest" then everforest
+          else tokyonight-nvim # Fallback to tokyonight if theme not found
+        ))
+        
         (lib.mkIf (builtins.elem "statusline" cfg.plugins) lualine-nvim)
         (lib.mkIf (builtins.elem "telescope" cfg.plugins) telescope-nvim)
         (lib.mkIf (builtins.elem "treesitter" cfg.plugins) {
@@ -116,38 +137,108 @@ in {
         vim.keymap.set('n', '<leader>q', '<cmd>quit<cr>', { desc = 'Quit' })
         
         ${lib.optionalString (builtins.elem "theme" cfg.plugins) ''
-        -- Theme configuration
-        ${if cfg.theme == "catppuccin" then ''
-        require('catppuccin').setup({
-          flavour = "mocha", -- latte, frappe, macchiato, mocha
-          term_colors = true,
-          transparent_background = false,
-          no_italic = false,
-          no_bold = false,
-          styles = {
-            comments = { "italic" },
-            conditionals = { "italic" },
-            loops = {},
-            functions = {},
-            keywords = {},
-            strings = {},
-            variables = {},
-            numbers = {},
-            booleans = {},
-            properties = {},
-            types = {},
-            operators = {}
-          },
-          integrations = {
-            cmp = true,
-            gitsigns = true,
-            telescope = true,
-            which_key = true,
-            treesitter = true
-          }
-        })
-        '' else ""}
-        vim.cmd('colorscheme ${cfg.theme}')
+        -- Theme configuration with theme-specific settings
+        -- Function to safely load theme-specific configs
+        local function setup_theme(theme_name)
+          if theme_name == "catppuccin" then
+            -- Catppuccin-specific setup
+            pcall(function()
+              require('catppuccin').setup({
+                flavour = "mocha",
+                term_colors = true,
+                transparent_background = false,
+                no_italic = false,
+                no_bold = false,
+                styles = {
+                  comments = { "italic" },
+                  conditionals = { "italic" },
+                  loops = {},
+                  functions = {},
+                  keywords = {},
+                  strings = {},
+                  variables = {},
+                  numbers = {},
+                  booleans = {},
+                  properties = {},
+                  types = {},
+                  operators = {}
+                },
+                integrations = {
+                  cmp = true,
+                  gitsigns = true,
+                  telescope = true,
+                  which_key = true,
+                  treesitter = true
+                }
+              })
+            end)
+          elseif theme_name == "tokyonight" then
+            -- Tokyonight-specific setup
+            pcall(function()
+              require('tokyonight').setup({
+                style = "night",
+                transparent = false,
+                terminal_colors = true
+              })
+            end)
+          elseif theme_name == "nord" then
+            -- Nord-specific setup
+            pcall(function()
+              vim.g.nord_contrast = true
+              vim.g.nord_borders = true
+              vim.g.nord_disable_background = false
+              vim.g.nord_italic = true
+            end)
+          elseif theme_name == "gruvbox" then
+            -- Gruvbox-specific setup
+            pcall(function()
+              require('gruvbox').setup({
+                contrast = "medium",
+                palette_overrides = {},
+                transparent_mode = false
+              })
+            end)
+          elseif theme_name == "dracula" then
+            -- Dracula-specific setup
+            pcall(function()
+              vim.g.dracula_colorterm = 1
+              vim.g.dracula_italic = 1
+            end)
+          elseif theme_name == "onedark" then
+            -- Onedark-specific setup
+            pcall(function()
+              require('onedark').setup({
+                style = 'dark'
+              })
+            end)
+          elseif theme_name == "nightfox" then
+            -- Nightfox-specific setup
+            pcall(function()
+              require('nightfox').setup({
+                options = {
+                  transparent = false,
+                  terminal_colors = true
+                }
+              })
+            end)
+          elseif theme_name == "everforest" then
+            -- Everforest-specific setup
+            pcall(function()
+              vim.g.everforest_background = 'medium'
+              vim.g.everforest_better_performance = 1
+            end)
+          end
+        end
+
+        -- Set up the specified theme
+        setup_theme("${cfg.theme}")
+        
+        -- Safely try to load the colorscheme, fall back to a default if it fails
+        local status_ok, _ = pcall(vim.cmd, 'colorscheme ${cfg.theme}')
+        if not status_ok then
+          vim.notify('Theme "${cfg.theme}" not found! Falling back to default', vim.log.levels.WARN)
+          pcall(vim.cmd, 'colorscheme tokyonight')
+        end
         ''}
         
         ${lib.optionalString (builtins.elem "statusline" cfg.plugins) ''
@@ -155,7 +246,20 @@ in {
         require('lualine').setup {
           options = {
             icons_enabled = true,
-            theme = '${if cfg.theme == "catppuccin" then "catppuccin" else cfg.theme}',
+            -- Map theme names to lualine theme names for better compatibility
+            theme = (function()
+              local theme_map = {
+                catppuccin = 'catppuccin', 
+                tokyonight = 'tokyonight',
+                nord = 'nord',
+                gruvbox = 'gruvbox',
+                dracula = 'dracula',
+                onedark = 'onedark',
+                nightfox = 'nightfox',
+                everforest = 'everforest'
+              }
+              return theme_map["${cfg.theme}"] or 'auto'
+            end)(),
             component_separators = "",
             section_separators = ""
           }
