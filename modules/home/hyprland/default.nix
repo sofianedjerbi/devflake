@@ -47,10 +47,10 @@ in {
   };
 
   config = mkIf cfg.enable {
-    # Enable our custom Waybar configuration with the preferred theme
+    # Enable our custom Waybar configuration
     myWaybar = {
       enable = true;
-      theme = "dracula"; # Using Dracula theme
+      theme = lib.mkDefault "dracula"; # Default theme that can be overridden by users
       position = "top";
     };
     
@@ -285,36 +285,36 @@ in {
       ipc = off
     '';
     
-    # Configure Kitty with Dracula theme
+    # Configure Kitty with theme colors
     programs.kitty = {
       enable = true;
       settings = {
-        background = "#${colors.background}";
-        foreground = "#${colors.foreground}";
-        selection_background = "#${colors.comment}";
-        selection_foreground = "#${colors.foreground}";
-        cursor = "#${colors.foreground}";
-        cursor_text_color = "#${colors.background}";
-        url_color = "#${colors.cyan}";
-        active_border_color = "#${colors.purple}";
-        inactive_border_color = "#${colors.comment}";
-        active_tab_background = "#${colors.background}";
-        active_tab_foreground = "#${colors.foreground}";
-        inactive_tab_background = "#${colors.currentLine}";
-        inactive_tab_foreground = "#${colors.foreground}";
-        tab_bar_background = "#${colors.background}";
+        background = lib.mkDefault "#${colors.background}";
+        foreground = lib.mkDefault "#${colors.foreground}";
+        selection_background = lib.mkDefault "#${colors.comment}";
+        selection_foreground = lib.mkDefault "#${colors.foreground}";
+        cursor = lib.mkDefault "#${colors.foreground}";
+        cursor_text_color = lib.mkDefault "#${colors.background}";
+        url_color = lib.mkDefault "#${colors.cyan}";
+        active_border_color = lib.mkDefault "#${colors.purple}";
+        inactive_border_color = lib.mkDefault "#${colors.comment}";
+        active_tab_background = lib.mkDefault "#${colors.background}";
+        active_tab_foreground = lib.mkDefault "#${colors.foreground}";
+        inactive_tab_background = lib.mkDefault "#${colors.currentLine}";
+        inactive_tab_foreground = lib.mkDefault "#${colors.foreground}";
+        tab_bar_background = lib.mkDefault "#${colors.background}";
         
         # Terminal window settings
-        background_opacity = "0.95";
-        window_padding_width = 8;
-        confirm_os_window_close = 0;
-        enable_audio_bell = false;
+        background_opacity = lib.mkDefault "0.95";
+        window_padding_width = lib.mkDefault 8;
+        confirm_os_window_close = lib.mkDefault 0;
+        enable_audio_bell = lib.mkDefault false;
       };
       
       # Configure font
       font = {
-        name = "JetBrains Mono Nerd Font";
-        size = 12;
+        name = lib.mkDefault "JetBrains Mono Nerd Font";
+        size = lib.mkDefault 12;
       };
     };
     
