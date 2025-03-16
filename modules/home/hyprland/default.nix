@@ -1,32 +1,16 @@
-{ config, lib, pkgs, themeColors ? null, ... }:
+{ config, lib, pkgs, ... }:
 
 with lib;
 let
   cfg = config.myHyprland;
-  
-  # Fallback colors if theme is not available (should not happen in normal usage)
-  defaultTheme = {
-    background = "282a36";
-    currentLine = "44475a";
-    foreground = "f8f8f2";
-    comment = "6272a4";
-    cyan = "8be9fd";
-    green = "50fa7b";
-    orange = "ffb86c";
-    pink = "ff79c6";
-    purple = "bd93f9";
-    red = "ff5555";
-    yellow = "f1fa8c";
-  };
-  
-  # Use theme colors or fall back to default
-  colors = if themeColors != null then themeColors else defaultTheme;
 in {
   imports = [
     # Import our custom Waybar module
     ../waybar
     # Import our custom Kitty module
     ../kitty
+    # Import our custom Fuzzel module
+    ../fuzzel
   ];
 
   options.myHyprland = {
@@ -63,6 +47,12 @@ in {
       enable = true;
     };
     
+    # Enable our custom Fuzzel configuration
+    myFuzzel = {
+      enable = true;
+      terminal = cfg.terminal;
+    };
+    
     # Enable Hyprland
     wayland.windowManager.hyprland = {
       enable = true;
@@ -87,12 +77,7 @@ in {
           gaps_in = 5;
           gaps_out = 10;
           border_size = 2;
-          "col.active_border" = "rgba(${colors.purple}ee) rgba(${colors.pink}ee) 45deg";
-          "col.inactive_border" = "rgba(${colors.comment}aa)";
           layout = "dwindle";
-          
-          # For all categories, see https://wiki.hyprland.org/Configuring/Variables/
-          #cursor_inactive_timeout = 4;
         };
         
         # Decoration
@@ -113,10 +98,10 @@ in {
           # Shadows - using the correct Hyprland property names
           shadow = {
             enabled = true;
-            render_power = 2; # This was shadow_render_power 
-            range = 15; # This was shadow_range
-            offset = "0 5"; # This was shadow_offset
-            color = "rgba(${colors.background}99)"; # This was col.shadow
+            render_power = 2; 
+            range = 15; 
+            offset = "0 5"; 
+            color = "rgba(11, 11, 11, 0.8)"; 
           };
         };
         
@@ -322,22 +307,9 @@ in {
       pavucontrol
     ];
     
-    # Set up Swaylock with theme colors
+    # Set up Swaylock with Catppuccin colors
     programs.swaylock = {
       enable = true;
-      settings = {
-        color = "${colors.background}";
-        show-failed-attempts = true;
-        indicator-idle-visible = false;
-        indicator-radius = 100;
-        indicator-thickness = 7;
-        ring-color = "${colors.comment}";
-        inside-color = "${colors.background}";
-        key-hl-color = "${colors.cyan}";
-        line-color = "${colors.purple}";
-        separator-color = "${colors.comment}";
-        text-color = "${colors.foreground}";
-      };
     };
   };
 }

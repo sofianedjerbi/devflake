@@ -61,8 +61,16 @@
           # Host-specific configuration
           (./hosts + "/${hostname}/default.nix")
           
-          # Catppuccin theme
+          # Catppuccin theme (globally configured)
           catppuccin.nixosModules.catppuccin
+          {
+            # Global Catppuccin theme configuration (set for all NixOS modules)
+            catppuccin = {
+              flavor = "mocha";
+              accent = "mauve";
+              enable = true;
+            };
+          }
           
           # Home Manager integration
           home-manager.nixosModules.home-manager
@@ -91,8 +99,16 @@
               # User-specific configuration
               (./users + "/${username}/default.nix")
               
-              # Catppuccin theme
+              # Catppuccin theme (globally configured)
               catppuccin.homeManagerModules.catppuccin
+              {
+                # Global Catppuccin theme configuration (set for all home-manager modules)
+                catppuccin = {
+                  flavor = "mocha";
+                  accent = "mauve";
+                  enable = true;
+                };
+              }
             ];
           })
         users;

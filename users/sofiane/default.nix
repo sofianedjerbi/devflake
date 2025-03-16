@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, username ? null, themeColors ? null, ... }:
+{ config, pkgs, lib, inputs, username ? null, ... }:
 
 let
   # User information
@@ -8,24 +8,6 @@ let
   userFullName = "Sofiane Djerbi";
   userEmail = "contact@sofianedjerbi.com";
   homeDir = "/home/${actualUsername}";
-  
-  # Fallback colors if theme is not available (should not happen in normal usage)
-  defaultTheme = {
-    background = "282a36";
-    currentLine = "44475a";
-    foreground = "f8f8f2";
-    comment = "6272a4";
-    cyan = "8be9fd";
-    green = "50fa7b";
-    orange = "ffb86c";
-    pink = "ff79c6";
-    purple = "bd93f9";
-    red = "ff5555";
-    yellow = "f1fa8c";
-  };
-  
-  # Use theme colors or fall back to default
-  colors = if themeColors != null then themeColors else defaultTheme;
 in {
   imports = [
     # Import common user settings
@@ -39,14 +21,10 @@ in {
     
     # Import kitty configuration
     ../../modules/home/kitty
+    
+    # Import fuzzel configuration
+    ../../modules/home/fuzzel
   ];
-
-  # === Theme Configuration ==================================================
-  myTheme = {
-    enable = true;
-    flavor = "mocha";  # mocha, macchiato, frappe, or latte
-    accent = "mauve";  # One of the Catppuccin accent colors
-  };
 
   # === Basic User Information ================================================
   home = {
@@ -59,7 +37,6 @@ in {
       code-cursor
       brave
       spotify
-      fuzzel  # Now managed by Catppuccin's module
     ];
     
     # Environment variables
@@ -81,7 +58,6 @@ in {
   # === Waybar Configuration ==================================================
   myWaybar = {
     enable = true;
-    theme = "catppuccin-mocha";
     position = "top";
   };
   
@@ -97,43 +73,25 @@ in {
     };
   };
   
-  # === Notification Configuration ============================================
-  services.dunst = {
+  # === Fuzzel Configuration =================================================
+  myFuzzel = {
     enable = true;
-    settings = {
-      global = {
-        width = 300;
-        height = 300;
-        offset = "10x50";
-        origin = "top-right";
-        transparency = 10;
-        frame_color = "#${colors.purple}";
-        separator_color = "frame";
-        font = "JetBrains Mono Nerd Font 10";
-        corner_radius = 10;
-        frame_width = 2;
-      };
-      
-      urgency_low = {
-        background = "#${colors.background}";
-        foreground = "#${colors.foreground}";
-        timeout = 5;
-      };
-      
-      urgency_normal = {
-        background = "#${colors.background}";
-        foreground = "#${colors.foreground}";
-        timeout = 10;
-      };
-      
-      urgency_critical = {
-        background = "#${colors.background}";
-        foreground = "#${colors.red}";
-        frame_color = "#${colors.red}";
-        timeout = 0;
+    font = "JetBrains Mono";
+    fontSize = 12;
+    width = 35;
+    borderRadius = 10;
+    backgroundOpacity = "ee";  # ~93% opacity
+    showIcons = false;         # Elegant look without icons
+    animation = "zoom";
+    extraConfig = {
+      main = {
+        prompt = "❯ ";         # Simple prompt character
       };
     };
   };
+  
+  # === Notification Configuration ============================================
+  services.dunst.enable = true;
 
   # === User-specific Configurations ==========================================
   
@@ -157,4 +115,7 @@ in {
       git_branch = { symbol = "🌱 "; };
     };
   };
+  
+  # === Neovim Theme Override ================================================
+  myNeovim.theme = "catppuccin";
 } 

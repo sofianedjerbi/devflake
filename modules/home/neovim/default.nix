@@ -26,6 +26,12 @@ in {
       description = "List of plugins to enable";
     };
     
+    theme = mkOption {
+      type = types.enum [ "catppuccin" ];
+      default = "catppuccin";
+      description = "The theme is provided by the Catppuccin Nix module";
+    };
+    
     userConfig = mkOption {
       type = types.lines;
       default = "";
@@ -61,8 +67,7 @@ in {
         plenary-nvim
         which-key-nvim
         
-        # Catppuccin is now handled by the Catppuccin module
-        
+        # Using Catppuccin theme provided by the Nix module
         (lib.mkIf (builtins.elem "statusline" cfg.plugins) lualine-nvim)
         (lib.mkIf (builtins.elem "telescope" cfg.plugins) telescope-nvim)
         (lib.mkIf (builtins.elem "treesitter" cfg.plugins) {
@@ -108,12 +113,14 @@ in {
         vim.keymap.set('n', '<leader>w', '<cmd>write<cr>', { desc = 'Save' })
         vim.keymap.set('n', '<leader>q', '<cmd>quit<cr>', { desc = 'Quit' })
         
+        -- Note: Theme configuration is handled by the Catppuccin Nix module
+        
         ${lib.optionalString (builtins.elem "statusline" cfg.plugins) ''
         -- Status line
         require('lualine').setup {
           options = {
             icons_enabled = true,
-            theme = 'catppuccin', -- This will be automatically set by Catppuccin
+            theme = 'catppuccin',
             component_separators = "",
             section_separators = ""
           }
