@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+ { config, lib, pkgs, ... }:
 
 with lib;
 let
@@ -15,7 +15,7 @@ in {
     
     opacity = mkOption {
       type = types.str;
-      default = "0.95";
+      default = "1.0";
       description = "Background opacity (0.0 to 1.0)";
     };
     

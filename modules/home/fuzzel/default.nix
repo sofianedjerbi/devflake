@@ -21,13 +21,13 @@ in {
     
     fontSize = mkOption {
       type = types.int;
-      default = 12;
+      default = 10;
       description = "Font size for the launcher";
     };
     
     width = mkOption {
       type = types.int;
-      default = 35;
+      default = 20;
       description = "Width of the launcher (in characters)";
     };
     
@@ -79,49 +79,58 @@ in {
     # Configure Fuzzel
     programs.fuzzel = {
       enable = true;
-      settings = {
-        main = {
-          font = "${cfg.font}:size=${toString cfg.fontSize}";
-          terminal = "${cfg.terminal}";
-          layer = "overlay";
-          width = toString cfg.width;
-          horizontal-pad = "30";
-          vertical-pad = "20";
-          inner-pad = "10";
-          line-height = "25";
-          letter-spacing = "0.5";
-        };
-        
-        border = {
-          width = "2";
-          radius = toString cfg.borderRadius;
-        };
-        
-        icon = {
-          theme = if cfg.showIcons then "hicolor" else "";
-          size = if cfg.showIcons then "24" else "0";
-        };
-        
-        dmenu = {
-          exit-immediately-if-empty = "yes";
-        };
-        
-        search = {
-          fuzzy = "yes";
-        };
-        
-        key-bindings = {
-          next = "Tab Down";
-          prev = "ISO_Left_Tab Up";
-        };
-        
-        output = {
-          anchor = "center";
-          clip = "no";
-          animation = cfg.animation;
-          duration = "100";
-        };
-      } // cfg.extraConfig;
+      settings = mkMerge [
+        {
+          main = {
+            # Core settings
+            font = "${cfg.font}:size=${toString cfg.fontSize}";
+            terminal = "${cfg.terminal}";
+            layer = "overlay";
+            width = toString cfg.width;
+            # Ultra compact padding values
+            horizontal-pad = "5";
+            vertical-pad = "3";
+            inner-pad = "2";
+            line-height = "16";
+            letter-spacing = "0.1";
+            
+            prompt = lib.mkForce "";
+            
+            # Icon settings
+            icons-enabled = if cfg.showIcons then "yes" else "no";
+            
+            # Animation and positioning
+            anchor = "center";
+            
+            # Search behavior
+            match-mode = "fuzzy";
+            
+            # Reduce lines to make it more compact
+            lines = "8";  # Default is usually 15
+          };
+          
+          # Fix for icon settings
+          icon = lib.mkIf cfg.showIcons {
+            theme = "hicolor";
+            size = "24";
+          };
+          
+          border = {
+            width = "1";
+            radius = toString cfg.borderRadius;
+          };
+          
+          dmenu = {
+            exit-immediately-if-empty = "yes";
+          };
+          
+          key-bindings = {
+            next = "Down Control+n";
+            prev = "Up Control+p";
+          };
+        }
+        cfg.extraConfig
+      ];
     };
   };
 } 

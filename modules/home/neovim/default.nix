@@ -55,7 +55,6 @@ in {
       extraPackages = with pkgs; [
         # Core dependencies
         (lib.mkIf (builtins.elem "lsp" cfg.plugins) nil)                           # Nix LSP
-        (lib.mkIf (builtins.elem "lsp" cfg.plugins) nodePackages.typescript-language-server) # TypeScript LSP
         
         # Core utilities for Telescope and other plugins
         (lib.mkIf (builtins.elem "telescope" cfg.plugins) ripgrep)                 # Fast grep for telescope
@@ -76,7 +75,7 @@ in {
           # Install treesitter with all grammars with Nix
           config = ''
             require('nvim-treesitter.configs').setup {
-              ensure_installed = { "lua", "nix", "typescript", "javascript" },
+              ensure_installed = { "lua", "nix", "javascript" },
               highlight = { enable = true },
               -- Use a local parser directory in the XDG cache directory
               parser_install_dir = vim.fn.stdpath('cache') .. '/treesitter',
@@ -145,11 +144,6 @@ in {
         
         -- Setup for specific LSPs
         lspconfig.nil_ls.setup{}
-        
-        -- Use typescript-language-server instead of deprecated tsserver
-        lspconfig.typescript_language_server.setup{
-          filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" }
-        }
         ''}
         
         ${lib.optionalString (builtins.elem "completion" cfg.plugins) ''

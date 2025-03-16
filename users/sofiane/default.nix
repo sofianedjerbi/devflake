@@ -60,7 +60,7 @@ in {
   myKitty = {
     enable = true;
     fontSize = 12;
-    opacity = "0.95";
+    opacity = "1.0";
     extraSettings = {
       # Any additional custom settings can go here
       cursor_blink_interval = "0.5";
@@ -72,15 +72,15 @@ in {
   myFuzzel = {
     enable = true;
     font = "JetBrains Mono";
-    fontSize = 12;
-    width = 35;
+    fontSize = 8;
+    width = 20;
     borderRadius = 10;
     backgroundOpacity = "ee";  # ~93% opacity
     showIcons = false;         # Elegant look without icons
     animation = "zoom";
     extraConfig = {
       main = {
-        prompt = "❯ ";         # Simple prompt character
+        prompt = " ";         # Simple prompt character
       };
     };
   };

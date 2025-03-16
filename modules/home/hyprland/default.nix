@@ -36,23 +36,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    # Enable our custom Waybar configuration
-    myWaybar = {
-      enable = true;
-      position = "top";
-    };
-    
-    # Enable our custom Kitty configuration
-    myKitty = {
-      enable = true;
-    };
-    
-    # Enable our custom Fuzzel configuration
-    myFuzzel = {
-      enable = true;
-      terminal = cfg.terminal;
-    };
-    
     # Enable Hyprland with Catppuccin theming
     wayland.windowManager.hyprland = {
       enable = true;
