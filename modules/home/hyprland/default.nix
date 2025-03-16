@@ -282,7 +282,7 @@ in {
       ipc = off
     '';
     
-    # Ensure we have the necessary tools installed
+    # Ensure we have the necessary tools installed - combined with dunst packages
     home.packages = with pkgs; [
       # Core tools for Hyprland
       hyprpaper
@@ -302,17 +302,15 @@ in {
       
       # Audio control
       pavucontrol
+      
+      # Notification system
+      dunst
+      libcanberra-tools # For notification sounds
     ];
     
     # Set up Swaylock - Catppuccin module will handle theming
     programs.swaylock = {
       enable = true;
     };
-    
-    # Make sure we have dunst installed
-    home.packages = with pkgs; [
-      dunst
-      libcanberra-tools # For notification sounds
-    ];
   };
 }
