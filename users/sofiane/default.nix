@@ -36,6 +36,9 @@ in {
     
     # Import waybar configuration
     ../../modules/home/waybar
+    
+    # Import kitty configuration
+    ../../modules/home/kitty
   ];
 
   # === Theme Configuration ==================================================
@@ -81,48 +84,15 @@ in {
   };
   
   # === Kitty Configuration ==================================================
-  programs.kitty = {
+  myKitty = {
     enable = true;
-    settings = {
-      # Catppuccin Mocha colors
-      background = "#1e1e2e";
-      foreground = "#cdd6f4";
-      selection_background = "#585b70";
-      selection_foreground = "#cdd6f4";
-      url_color = "#89dceb";
-      cursor = "#f5e0dc";
-      
-      # Normal colors
-      color0 = "#45475a"; # black
-      color1 = "#f38ba8"; # red
-      color2 = "#a6e3a1"; # green
-      color3 = "#f9e2af"; # yellow
-      color4 = "#89b4fa"; # blue
-      color5 = "#cba6f7"; # magenta
-      color6 = "#89dceb"; # cyan
-      color7 = "#bac2de"; # white
-      
-      # Bright colors
-      color8 = "#585b70"; # bright black
-      color9 = "#f38ba8"; # bright red
-      color10 = "#a6e3a1"; # bright green
-      color11 = "#f9e2af"; # bright yellow
-      color12 = "#89b4fa"; # bright blue
-      color13 = "#cba6f7"; # bright magenta
-      color14 = "#89dceb"; # bright cyan
-      color15 = "#a6adc8"; # bright white
-      
-      # Terminal window settings
-      background_opacity = "0.95";
-      window_padding_width = 8;
-      confirm_os_window_close = 0;
-      enable_audio_bell = false;
-    };
-    
-    # Configure font
-    font = {
-      name = "JetBrains Mono Nerd Font";
-      size = 12;
+    theme = "catppuccin-mocha";
+    fontSize = 12;
+    opacity = "0.95";
+    extraSettings = {
+      # Any additional custom settings can go here
+      cursor_blink_interval = "0.5";
+      cursor_shape = "beam";
     };
   };
   

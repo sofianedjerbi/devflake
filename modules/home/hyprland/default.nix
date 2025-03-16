@@ -22,6 +22,8 @@ in {
   imports = [
     # Import our custom Waybar module
     ../waybar
+    # Import our custom Kitty module
+    ../kitty
   ];
 
   options.myHyprland = {
@@ -52,6 +54,12 @@ in {
       enable = true;
       theme = lib.mkDefault "dracula"; # Default theme that can be overridden by users
       position = "top";
+    };
+    
+    # Enable our custom Kitty configuration
+    myKitty = {
+      enable = true;
+      theme = lib.mkDefault "dracula"; # Default theme that can be overridden by users
     };
     
     # Enable Hyprland
@@ -285,40 +293,7 @@ in {
       ipc = off
     '';
     
-    # Configure Kitty with theme colors
-    programs.kitty = {
-      enable = true;
-      settings = {
-        background = lib.mkDefault "#${colors.background}";
-        foreground = lib.mkDefault "#${colors.foreground}";
-        selection_background = lib.mkDefault "#${colors.comment}";
-        selection_foreground = lib.mkDefault "#${colors.foreground}";
-        cursor = lib.mkDefault "#${colors.foreground}";
-        cursor_text_color = lib.mkDefault "#${colors.background}";
-        url_color = lib.mkDefault "#${colors.cyan}";
-        active_border_color = lib.mkDefault "#${colors.purple}";
-        inactive_border_color = lib.mkDefault "#${colors.comment}";
-        active_tab_background = lib.mkDefault "#${colors.background}";
-        active_tab_foreground = lib.mkDefault "#${colors.foreground}";
-        inactive_tab_background = lib.mkDefault "#${colors.currentLine}";
-        inactive_tab_foreground = lib.mkDefault "#${colors.foreground}";
-        tab_bar_background = lib.mkDefault "#${colors.background}";
-        
-        # Terminal window settings
-        background_opacity = lib.mkDefault "0.95";
-        window_padding_width = lib.mkDefault 8;
-        confirm_os_window_close = lib.mkDefault 0;
-        enable_audio_bell = lib.mkDefault false;
-      };
-      
-      # Configure font
-      font = {
-        name = lib.mkDefault "JetBrains Mono Nerd Font";
-        size = lib.mkDefault 12;
-      };
-    };
-    
-    # Configure Fuzzel with Dracula theme
+    # Configure Fuzzel with theme colors
     home.file.".config/fuzzel/fuzzel.ini".text = ''
       [colors]
       background=${colors.background}ff
@@ -358,9 +333,6 @@ in {
       
       # Notification
       dunst
-      
-      # Terminal
-      kitty
       
       # File manager - using Yazi instead of Thunar
       yazi
