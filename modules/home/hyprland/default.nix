@@ -4,6 +4,11 @@ with lib;
 let
   cfg = config.myHyprland;
 in {
+  imports = [
+    # Import our custom Waybar module
+    ../waybar
+  ];
+
   options.myHyprland = {
     enable = mkEnableOption "Enable custom Hyprland configuration";
     
@@ -27,6 +32,13 @@ in {
   };
 
   config = mkIf cfg.enable {
+    # Enable our custom Waybar configuration with the preferred theme
+    myWaybar = {
+      enable = true;
+      theme = "catppuccin-mocha"; # You can choose: catppuccin-mocha, nord, or dracula
+      position = "top";
+    };
+    
     # Enable Hyprland
     wayland.windowManager.hyprland = {
       enable = true;
@@ -41,7 +53,7 @@ in {
         # Set user wallpaper via exec-once
         exec-once = [
           "${pkgs.hyprpaper}/bin/hyprpaper"
-          "${pkgs.waybar}/bin/waybar"
+          # We remove waybar from here since it's now managed by Home Manager through our module
           "${pkgs.networkmanagerapplet}/bin/nm-applet --indicator"
           "swayidle -w timeout 120 'hyprctl dispatch dpms off' resume 'hyprctl dispatch dpms on' timeout 180 'swaylock -f' timeout 300 'systemctl suspend' before-sleep 'swaylock -f'"
         ];
@@ -263,7 +275,7 @@ in {
       # Core tools for Hyprland
       hyprpaper
       fuzzel
-      waybar
+      # waybar - Removed from here since it's now managed by our waybar module
       networkmanagerapplet
       
       # Screenshot & utilities

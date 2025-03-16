@@ -15,6 +15,9 @@ in {
     
     # Import hyprland configuration
     ../../modules/home/hyprland
+    
+    # Import waybar configuration
+    ../../modules/home/waybar
   ];
 
   # === Basic User Information ================================================
@@ -44,6 +47,13 @@ in {
     wallpaper = ../../resources/wallpapers/neon.jpg;
     terminal = "kitty";
     launcher = "fuzzel";
+  };
+  
+  # === Waybar Configuration ==================================================
+  myWaybar = {
+    enable = true;
+    theme = "catppuccin-mocha"; # Consistent with Hyprland theme
+    position = "top";
   };
 
   # === User-specific Configurations ==========================================

@@ -175,6 +175,7 @@
     dunst
     grim
     slurp
+    wlogout  # Added for power menu integration
     
     # File management tools
     yazi # Terminal file manager
