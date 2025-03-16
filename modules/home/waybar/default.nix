@@ -1,8 +1,23 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, themeColors ? null, ... }:
 
 with lib;
 let
   cfg = config.myWaybar;
+  
+  # Use theme colors from the central theme module or fallback to Dracula
+  colors = if themeColors != null then themeColors else {
+    background = "282a36";
+    currentLine = "44475a";
+    foreground = "f8f8f2";
+    comment = "6272a4";
+    cyan = "8be9fd";
+    green = "50fa7b";
+    orange = "ffb86c";
+    pink = "ff79c6";
+    purple = "bd93f9";
+    red = "ff5555";
+    yellow = "f1fa8c";
+  };
 in {
   options.myWaybar = {
     enable = mkEnableOption "Enable custom Waybar configuration";
@@ -15,7 +30,7 @@ in {
     
     theme = mkOption {
       type = types.enum [ "dark" "light" "catppuccin-mocha" "nord" "dracula" ];
-      default = "catppuccin-mocha";
+      default = "dracula";
       description = "Theme to use for Waybar";
     };
   };
@@ -390,36 +405,36 @@ in {
       '';
       
       ".config/waybar/dracula.css".text = ''
-        @define-color base   #282a36;
+        @define-color base   #${colors.background};
         @define-color mantle #1e1f29;
         @define-color crust  #181920;
         
-        @define-color text     #f8f8f2;
-        @define-color subtext0 #f8f8f2;
-        @define-color subtext1 #f8f8f2;
+        @define-color text     #${colors.foreground};
+        @define-color subtext0 #${colors.foreground};
+        @define-color subtext1 #${colors.foreground};
         
-        @define-color surface0 #44475a;
-        @define-color surface1 #6272a4;
-        @define-color surface2 #6272a4;
+        @define-color surface0 #${colors.currentLine};
+        @define-color surface1 #${colors.comment};
+        @define-color surface2 #${colors.comment};
         
-        @define-color overlay0 #6272a4;
-        @define-color overlay1 #6272a4;
-        @define-color overlay2 #6272a4;
+        @define-color overlay0 #${colors.comment};
+        @define-color overlay1 #${colors.comment};
+        @define-color overlay2 #${colors.comment};
         
-        @define-color blue      #8be9fd;
-        @define-color lavender  #bd93f9;
-        @define-color sapphire  #8be9fd;
-        @define-color sky       #8be9fd;
-        @define-color teal      #8be9fd;
-        @define-color green     #50fa7b;
-        @define-color yellow    #f1fa8c;
-        @define-color peach     #ffb86c;
-        @define-color maroon    #ff5555;
-        @define-color red       #ff5555;
-        @define-color mauve     #bd93f9;
-        @define-color pink      #ff79c6;
-        @define-color flamingo  #ffb86c;
-        @define-color rosewater #f8f8f2;
+        @define-color blue      #${colors.cyan};
+        @define-color lavender  #${colors.purple};
+        @define-color sapphire  #${colors.cyan};
+        @define-color sky       #${colors.cyan};
+        @define-color teal      #${colors.cyan};
+        @define-color green     #${colors.green};
+        @define-color yellow    #${colors.yellow};
+        @define-color peach     #${colors.orange};
+        @define-color maroon    #${colors.red};
+        @define-color red       #${colors.red};
+        @define-color mauve     #${colors.purple};
+        @define-color pink      #${colors.pink};
+        @define-color flamingo  #${colors.orange};
+        @define-color rosewater #${colors.foreground};
       '';
     };
     
@@ -433,12 +448,12 @@ in {
         }
         
         window {
-          background-color: rgba(30, 30, 46, 0.8);
+          background-color: rgba(${colors.background}, 0.8);
         }
         
         button {
-          color: #cdd6f4;
-          background-color: #313244;
+          color: #${colors.foreground};
+          background-color: #${colors.currentLine};
           border-style: solid;
           border-width: 0;
           background-repeat: no-repeat;
@@ -450,8 +465,8 @@ in {
         }
         
         button:focus, button:active, button:hover {
-          background-color: #585b70;
-          color: #b4befe;
+          background-color: #${colors.comment};
+          color: #${colors.cyan};
           outline-style: none;
         }
         

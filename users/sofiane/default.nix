@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, username ? null, ... }:
+{ config, pkgs, lib, inputs, username ? null, themeColors ? null, ... }:
 
 let
   # User information
@@ -8,10 +8,28 @@ let
   userFullName = "Sofiane Djerbi";
   userEmail = "contact@sofianedjerbi.com";
   homeDir = "/home/${actualUsername}";
+  
+  # Use theme colors from the central theme module or fallback to Dracula
+  colors = if themeColors != null then themeColors else {
+    background = "282a36";
+    currentLine = "44475a";
+    foreground = "f8f8f2";
+    comment = "6272a4";
+    cyan = "8be9fd";
+    green = "50fa7b";
+    orange = "ffb86c";
+    pink = "ff79c6";
+    purple = "bd93f9";
+    red = "ff5555";
+    yellow = "f1fa8c";
+  };
 in {
   imports = [
     # Import common user settings
     ../_modules/default.nix
+    
+    # Import theme configuration
+    ../../modules/home/theme
     
     # Import hyprland configuration
     ../../modules/home/hyprland
@@ -19,6 +37,12 @@ in {
     # Import waybar configuration
     ../../modules/home/waybar
   ];
+
+  # === Theme Configuration ==================================================
+  myTheme = {
+    enable = true;
+    name = "dracula";
+  };
 
   # === Basic User Information ================================================
   home = {
@@ -52,8 +76,46 @@ in {
   # === Waybar Configuration ==================================================
   myWaybar = {
     enable = true;
-    theme = "catppuccin-mocha"; # Consistent with Hyprland theme
+    theme = "dracula"; # Using Dracula theme
     position = "top";
+  };
+  
+  # === Notification Configuration ============================================
+  services.dunst = {
+    enable = true;
+    settings = {
+      global = {
+        width = 300;
+        height = 300;
+        offset = "10x50";
+        origin = "top-right";
+        transparency = 10;
+        frame_color = "#${colors.purple}";
+        separator_color = "frame";
+        font = "JetBrains Mono Nerd Font 10";
+        corner_radius = 10;
+        frame_width = 2;
+      };
+      
+      urgency_low = {
+        background = "#${colors.background}";
+        foreground = "#${colors.foreground}";
+        timeout = 5;
+      };
+      
+      urgency_normal = {
+        background = "#${colors.background}";
+        foreground = "#${colors.foreground}";
+        timeout = 10;
+      };
+      
+      urgency_critical = {
+        background = "#${colors.background}";
+        foreground = "#${colors.red}";
+        frame_color = "#${colors.red}";
+        timeout = 0;
+      };
+    };
   };
 
   # === User-specific Configurations ==========================================

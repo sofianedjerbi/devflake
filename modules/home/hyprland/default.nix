@@ -1,8 +1,23 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, themeColors ? null, ... }:
 
 with lib;
 let
   cfg = config.myHyprland;
+  
+  # Use theme colors from the central theme module or fallback to Dracula
+  colors = if themeColors != null then themeColors else {
+    background = "282a36";
+    currentLine = "44475a";
+    foreground = "f8f8f2";
+    comment = "6272a4";
+    cyan = "8be9fd";
+    green = "50fa7b";
+    orange = "ffb86c";
+    pink = "ff79c6";
+    purple = "bd93f9";
+    red = "ff5555";
+    yellow = "f1fa8c";
+  };
 in {
   imports = [
     # Import our custom Waybar module
@@ -35,7 +50,7 @@ in {
     # Enable our custom Waybar configuration with the preferred theme
     myWaybar = {
       enable = true;
-      theme = "catppuccin-mocha"; # You can choose: catppuccin-mocha, nord, or dracula
+      theme = "dracula"; # Using Dracula theme
       position = "top";
     };
     
@@ -63,8 +78,8 @@ in {
           gaps_in = 5;
           gaps_out = 10;
           border_size = 2;
-          "col.active_border" = "rgba(33ccffee) rgba(00ff99ee) 45deg";
-          "col.inactive_border" = "rgba(595959aa)";
+          "col.active_border" = "rgba(${colors.purple}ee) rgba(${colors.pink}ee) 45deg";
+          "col.inactive_border" = "rgba(${colors.comment}aa)";
           layout = "dwindle";
           
           # For all categories, see https://wiki.hyprland.org/Configuring/Variables/
@@ -87,11 +102,11 @@ in {
           };
           
           # Shadows
-          #drop_shadow = true;
-          #shadow_range = 15;
-          #shadow_render_power = 2;
-          #shadow_offset = "0 5";
-          #"col.shadow" = "rgba(00000099)";
+          drop_shadow = true;
+          shadow_range = 15;
+          shadow_render_power = 2;
+          shadow_offset = "0 5";
+          "col.shadow" = "rgba(${colors.background}99)";
         };
         
         # Animations
@@ -270,6 +285,60 @@ in {
       ipc = off
     '';
     
+    # Configure Kitty with Dracula theme
+    programs.kitty = {
+      enable = true;
+      settings = {
+        background = "#${colors.background}";
+        foreground = "#${colors.foreground}";
+        selection_background = "#${colors.comment}";
+        selection_foreground = "#${colors.foreground}";
+        cursor = "#${colors.foreground}";
+        cursor_text_color = "#${colors.background}";
+        url_color = "#${colors.cyan}";
+        active_border_color = "#${colors.purple}";
+        inactive_border_color = "#${colors.comment}";
+        active_tab_background = "#${colors.background}";
+        active_tab_foreground = "#${colors.foreground}";
+        inactive_tab_background = "#${colors.currentLine}";
+        inactive_tab_foreground = "#${colors.foreground}";
+        tab_bar_background = "#${colors.background}";
+        
+        # Terminal window settings
+        background_opacity = "0.95";
+        window_padding_width = 8;
+        confirm_os_window_close = 0;
+        enable_audio_bell = false;
+      };
+      
+      # Configure font
+      font = {
+        name = "JetBrains Mono Nerd Font";
+        size = 12;
+      };
+    };
+    
+    # Configure Fuzzel with Dracula theme
+    home.file.".config/fuzzel/fuzzel.ini".text = ''
+      [colors]
+      background=${colors.background}ff
+      text=${colors.foreground}ff
+      match=${colors.pink}ff
+      selection=${colors.comment}ff
+      selection-text=${colors.foreground}ff
+      border=${colors.purple}ff
+      
+      [border]
+      width=2
+      radius=8
+      
+      [main]
+      font=JetBrains Mono Nerd Font:size=12
+      terminal=${cfg.terminal}
+      layer=overlay
+      width=30
+    '';
+    
     # Ensure we have the necessary tools installed
     home.packages = with pkgs; [
       # Core tools for Hyprland
@@ -300,20 +369,21 @@ in {
       pavucontrol
     ];
     
-    # Set up Swaylock
+    # Set up Swaylock with Dracula theme
     programs.swaylock = {
       enable = true;
       settings = {
-        color = "000000";
+        color = "${colors.background}";
         show-failed-attempts = true;
         indicator-idle-visible = false;
         indicator-radius = 100;
         indicator-thickness = 7;
-        ring-color = "3b4252";
-        inside-color = "2e3440";
-        key-hl-color = "5e81ac";
-        line-color = "88c0d0";
-        separator-color = "3b4252";
+        ring-color = "${colors.comment}";
+        inside-color = "${colors.background}";
+        key-hl-color = "${colors.cyan}";
+        line-color = "${colors.purple}";
+        separator-color = "${colors.comment}";
+        text-color = "${colors.foreground}";
       };
     };
   };
