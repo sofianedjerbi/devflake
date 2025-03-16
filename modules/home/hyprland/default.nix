@@ -110,12 +110,14 @@ in {
             ignore_opacity = true;
           };
           
-          # Shadows
-          drop_shadow = true;
-          shadow_range = 15;
-          shadow_render_power = 2;
-          shadow_offset = "0 5";
-          "col.shadow" = "rgba(${colors.background}99)";
+          # Shadows - using the correct Hyprland property names
+          shadow = {
+            enabled = true;
+            render_power = 2; # This was shadow_render_power 
+            range = 15; # This was shadow_range
+            offset = "0 5"; # This was shadow_offset
+            color = "rgba(${colors.background}99)"; # This was col.shadow
+          };
         };
         
         # Animations
