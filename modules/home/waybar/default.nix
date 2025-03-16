@@ -4,8 +4,8 @@ with lib;
 let
   cfg = config.myWaybar;
   
-  # Use theme colors from the central theme module or fallback to Dracula
-  colors = if themeColors != null then themeColors else {
+  # Fallback colors if theme is not available (should not happen in normal usage)
+  defaultTheme = {
     background = "282a36";
     currentLine = "44475a";
     foreground = "f8f8f2";
@@ -18,6 +18,9 @@ let
     red = "ff5555";
     yellow = "f1fa8c";
   };
+  
+  # Use theme colors or fall back to default
+  colors = if themeColors != null then themeColors else defaultTheme;
 in {
   options.myWaybar = {
     enable = mkEnableOption "Enable custom Waybar configuration";
@@ -339,69 +342,69 @@ in {
     # Create theme files in the configuration directory
     home.file = {
       ".config/waybar/catppuccin-mocha.css".text = ''
-        @define-color base   #1e1e2e;
-        @define-color mantle #181825;
-        @define-color crust  #11111b;
+        @define-color base   #${colors.background};
+        @define-color mantle #1e1f29;
+        @define-color crust  #181920;
         
-        @define-color text     #cdd6f4;
-        @define-color subtext0 #a6adc8;
-        @define-color subtext1 #bac2de;
+        @define-color text     #${colors.foreground};
+        @define-color subtext0 #${colors.foreground};
+        @define-color subtext1 #${colors.foreground};
         
-        @define-color surface0 #313244;
-        @define-color surface1 #45475a;
-        @define-color surface2 #585b70;
+        @define-color surface0 #${colors.currentLine};
+        @define-color surface1 #${colors.comment};
+        @define-color surface2 #${colors.comment};
         
-        @define-color overlay0 #6c7086;
-        @define-color overlay1 #7f849c;
-        @define-color overlay2 #9399b2;
+        @define-color overlay0 #${colors.comment};
+        @define-color overlay1 #${colors.comment};
+        @define-color overlay2 #${colors.comment};
         
-        @define-color blue      #89b4fa;
-        @define-color lavender  #b4befe;
-        @define-color sapphire  #74c7ec;
-        @define-color sky       #89dceb;
-        @define-color teal      #94e2d5;
-        @define-color green     #a6e3a1;
-        @define-color yellow    #f9e2af;
-        @define-color peach     #fab387;
-        @define-color maroon    #eba0ac;
-        @define-color red       #f38ba8;
-        @define-color mauve     #cba6f7;
-        @define-color pink      #f5c2e7;
-        @define-color flamingo  #f2cdcd;
-        @define-color rosewater #f5e0dc;
+        @define-color blue      #${colors.cyan};
+        @define-color lavender  #${colors.purple};
+        @define-color sapphire  #${colors.cyan};
+        @define-color sky       #${colors.cyan};
+        @define-color teal      #${colors.cyan};
+        @define-color green     #${colors.green};
+        @define-color yellow    #${colors.yellow};
+        @define-color peach     #${colors.orange};
+        @define-color maroon    #${colors.red};
+        @define-color red       #${colors.red};
+        @define-color mauve     #${colors.purple};
+        @define-color pink      #${colors.pink};
+        @define-color flamingo  #${colors.orange};
+        @define-color rosewater #${colors.foreground};
       '';
       
       ".config/waybar/nord.css".text = ''
-        @define-color base   #2e3440;
-        @define-color mantle #2e3440;
+        @define-color base   #${colors.background};
+        @define-color mantle #${colors.background};
         @define-color crust  #272c36;
         
-        @define-color text     #eceff4;
-        @define-color subtext0 #d8dee9;
-        @define-color subtext1 #e5e9f0;
+        @define-color text     #${colors.foreground};
+        @define-color subtext0 #${colors.foreground};
+        @define-color subtext1 #${colors.foreground};
         
-        @define-color surface0 #3b4252;
-        @define-color surface1 #434c5e;
-        @define-color surface2 #4c566a;
+        @define-color surface0 #${colors.currentLine};
+        @define-color surface1 #${colors.comment};
+        @define-color surface2 #${colors.comment};
         
-        @define-color overlay0 #4c566a;
-        @define-color overlay1 #5e81ac;
-        @define-color overlay2 #81a1c1;
+        @define-color overlay0 #${colors.comment};
+        @define-color overlay1 #${colors.comment};
+        @define-color overlay2 #${colors.comment};
         
-        @define-color blue      #5e81ac;
-        @define-color lavender  #b48ead;
-        @define-color sapphire  #88c0d0;
-        @define-color sky       #81a1c1;
-        @define-color teal      #8fbcbb;
-        @define-color green     #a3be8c;
-        @define-color yellow    #ebcb8b;
-        @define-color peach     #d08770;
-        @define-color maroon    #bf616a;
-        @define-color red       #bf616a;
-        @define-color mauve     #b48ead;
-        @define-color pink      #b48ead;
-        @define-color flamingo  #d08770;
-        @define-color rosewater #e5e9f0;
+        @define-color blue      #${colors.cyan};
+        @define-color lavender  #${colors.purple};
+        @define-color sapphire  #${colors.cyan};
+        @define-color sky       #${colors.cyan};
+        @define-color teal      #${colors.cyan};
+        @define-color green     #${colors.green};
+        @define-color yellow    #${colors.yellow};
+        @define-color peach     #${colors.orange};
+        @define-color maroon    #${colors.red};
+        @define-color red       #${colors.red};
+        @define-color mauve     #${colors.purple};
+        @define-color pink      #${colors.pink};
+        @define-color flamingo  #${colors.orange};
+        @define-color rosewater #${colors.foreground};
       '';
       
       ".config/waybar/dracula.css".text = ''

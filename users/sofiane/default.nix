@@ -9,8 +9,8 @@ let
   userEmail = "contact@sofianedjerbi.com";
   homeDir = "/home/${actualUsername}";
   
-  # Use theme colors from the central theme module or fallback to Dracula
-  colors = if themeColors != null then themeColors else {
+  # Fallback colors if theme is not available (should not happen in normal usage)
+  defaultTheme = {
     background = "282a36";
     currentLine = "44475a";
     foreground = "f8f8f2";
@@ -23,6 +23,9 @@ let
     red = "ff5555";
     yellow = "f1fa8c";
   };
+  
+  # Use theme colors or fall back to default
+  colors = if themeColors != null then themeColors else defaultTheme;
 in {
   imports = [
     # Import common user settings
@@ -86,7 +89,6 @@ in {
   # === Kitty Configuration ==================================================
   myKitty = {
     enable = true;
-    theme = "catppuccin-mocha";
     fontSize = 12;
     opacity = "0.95";
     extraSettings = {

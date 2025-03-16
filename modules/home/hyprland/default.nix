@@ -4,8 +4,8 @@ with lib;
 let
   cfg = config.myHyprland;
   
-  # Use theme colors from the central theme module or fallback to Dracula
-  colors = if themeColors != null then themeColors else {
+  # Fallback colors if theme is not available (should not happen in normal usage)
+  defaultTheme = {
     background = "282a36";
     currentLine = "44475a";
     foreground = "f8f8f2";
@@ -18,6 +18,9 @@ let
     red = "ff5555";
     yellow = "f1fa8c";
   };
+  
+  # Use theme colors or fall back to default
+  colors = if themeColors != null then themeColors else defaultTheme;
 in {
   imports = [
     # Import our custom Waybar module
@@ -52,14 +55,12 @@ in {
     # Enable our custom Waybar configuration
     myWaybar = {
       enable = true;
-      theme = lib.mkDefault "dracula"; # Default theme that can be overridden by users
       position = "top";
     };
     
     # Enable our custom Kitty configuration
     myKitty = {
       enable = true;
-      theme = lib.mkDefault "dracula"; # Default theme that can be overridden by users
     };
     
     # Enable Hyprland
@@ -341,7 +342,7 @@ in {
       pavucontrol
     ];
     
-    # Set up Swaylock with Dracula theme
+    # Set up Swaylock with theme colors
     programs.swaylock = {
       enable = true;
       settings = {
