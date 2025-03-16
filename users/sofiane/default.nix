@@ -13,6 +13,9 @@ in {
     # Import common user settings
     ../_modules/default.nix
     
+    # Import catppuccin module
+    inputs.catppuccin.homeManagerModules.catppuccin
+    
     # Import hyprland configuration
     ../../modules/home/hyprland
     

@@ -106,6 +106,11 @@
     inetutils
     mtr
     dig
+
+    # Catppuccin theme-related packages
+    papirus-icon-theme
+    catppuccin-gtk
+    catppuccin-cursors
   ];
   
   # Security settings

@@ -1,5 +1,6 @@
 { config, lib, pkgs, ... }:
 
+with lib;
 {
   imports = [
     # Import the Neovim module
@@ -19,6 +20,13 @@
       enable = true;
       createDirectories = true;
     };
+  };
+
+  # Catppuccin theme
+  programs.catppuccin = {
+    enable = true;
+    flavor = "mocha";
+    accent = "lavender";
   };
 
   # Default program associations

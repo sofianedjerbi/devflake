@@ -61,16 +61,8 @@
           # Host-specific configuration
           (./hosts + "/${hostname}/default.nix")
           
-          # Catppuccin theme (globally configured)
+          # Catppuccin theme
           catppuccin.nixosModules.catppuccin
-          {
-            # Global Catppuccin theme configuration
-            catppuccin = {
-              enable = true;
-              flavor = "mocha";
-              accent = "mauve";
-            };
-          }
           
           # Home Manager integration
           home-manager.nixosModules.home-manager
@@ -101,19 +93,6 @@
               
               # Catppuccin theme (globally configured)
               catppuccin.homeManagerModules.catppuccin
-              {
-                # Global Catppuccin theme configuration
-                catppuccin = {
-                  # Enable Catppuccin for all supported programs
-                  enable = true;
-                  
-                  # Default flavor (can be overridden by users)
-                  flavor = "mocha";
-                  
-                  # Default accent color
-                  accent = "mauve";
-                };
-              }
             ];
           })
         users;
