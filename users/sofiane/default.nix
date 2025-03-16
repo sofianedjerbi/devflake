@@ -98,6 +98,23 @@ in {
     };
   };
   
+  # === Fuzzel Configuration =================================================
+  myFuzzel = {
+    enable = true;
+    font = "JetBrains Mono";
+    fontSize = 12;
+    width = 35;
+    borderRadius = 10;
+    backgroundOpacity = "ee";  # ~93% opacity
+    showIcons = false;         # Elegant look without icons
+    animation = "zoom";
+    extraConfig = {
+      main = {
+        prompt = "❯ ";         # Simple prompt character
+      };
+    };
+  };
+  
   # === Notification Configuration ============================================
   services.dunst = {
     enable = true;

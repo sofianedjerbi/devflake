@@ -27,6 +27,8 @@ in {
     ../waybar
     # Import our custom Kitty module
     ../kitty
+    # Import our custom Fuzzel module
+    ../fuzzel
   ];
 
   options.myHyprland = {
@@ -61,6 +63,12 @@ in {
     # Enable our custom Kitty configuration
     myKitty = {
       enable = true;
+    };
+    
+    # Enable our custom Fuzzel configuration
+    myFuzzel = {
+      enable = true;
+      terminal = cfg.terminal;
     };
     
     # Enable Hyprland
@@ -296,32 +304,10 @@ in {
       ipc = off
     '';
     
-    # Configure Fuzzel with theme colors
-    home.file.".config/fuzzel/fuzzel.ini".text = ''
-      [colors]
-      background=${colors.background}ff
-      text=${colors.foreground}ff
-      match=${colors.pink}ff
-      selection=${colors.comment}ff
-      selection-text=${colors.foreground}ff
-      border=${colors.purple}ff
-      
-      [border]
-      width=2
-      radius=8
-      
-      [main]
-      font=JetBrains Mono Nerd Font:size=12
-      terminal=${cfg.terminal}
-      layer=overlay
-      width=30
-    '';
-    
     # Ensure we have the necessary tools installed
     home.packages = with pkgs; [
       # Core tools for Hyprland
       hyprpaper
-      fuzzel
       # waybar - Removed from here since it's now managed by our waybar module
       networkmanagerapplet
       
