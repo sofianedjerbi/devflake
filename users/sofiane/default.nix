@@ -38,16 +38,8 @@ in {
     packages = with pkgs; [
       # GUI Applications
       code-cursor
-      brave
       spotify
     ];
-    
-    # Environment variables
-    sessionVariables = {
-      EDITOR = "nvim";
-      SHELL = "${pkgs.zsh}/bin/zsh";
-      XDG_SESSION_TYPE = "wayland";
-    };
   };
 
   # === Hyprland Configuration ================================================

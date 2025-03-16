@@ -8,7 +8,21 @@ with lib;
   ];
 
   # === Common Home Manager settings for all users ============================
-  home.stateVersion = "24.11";
+  home = {
+    stateVersion = "24.11";
+    
+    packages = with pkgs; [
+      brave
+      catppuccin-cursors
+    ];
+    
+    # Environment variables
+    sessionVariables = {
+      EDITOR = "nvim";
+      SHELL = "${pkgs.zsh}/bin/zsh";
+      XDG_SESSION_TYPE = "wayland";
+    };
+  };
   
   # Set a reasonable font configuration
   fonts.fontconfig.enable = true;
@@ -23,7 +37,7 @@ with lib;
   };
 
   # Catppuccin theme
-  programs.catppuccin = {
+  catppuccin = {
     enable = true;
     flavor = "mocha";
     accent = "lavender";
@@ -81,7 +95,6 @@ with lib;
   # Common terminal tools
   programs.bat = {
     enable = true;
-    config = { theme = "Dracula"; };
   };
 
   programs.fzf = {

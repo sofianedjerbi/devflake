@@ -59,6 +59,45 @@
     extraLocaleSettings = {
       LC_TIME = "en_US.UTF-8";
       LC_MONETARY = "en_US.UTF-8";
+      LC_ADDRESS = "en_US.UTF-8";
+      LC_IDENTIFICATION = "en_US.UTF-8";
+      LC_MEASUREMENT = "en_US.UTF-8";
+      LC_NAME = "en_US.UTF-8";
+      LC_NUMERIC = "en_US.UTF-8";
+      LC_PAPER = "en_US.UTF-8";
+      LC_TELEPHONE = "en_US.UTF-8";
+      LC_ALL = "en_US.UTF-8";
+    };
+    # Ensure proper Unicode support for console
+    supportedLocales = [
+      "en_US.UTF-8/UTF-8"
+    ];
+  };
+
+  # Set default font packages with good Unicode support
+  fonts = {
+    enableDefaultPackages = true;
+    packages = with pkgs; [
+      # Fonts with good Unicode support
+      noto-fonts
+      noto-fonts-cjk-sans
+      noto-fonts-emoji
+      liberation_ttf
+      fira-code
+      fira-code-symbols
+      dejavu_fonts
+      font-awesome
+    ];
+    fontconfig = {
+      defaultFonts = {
+        serif = [ "DejaVu Serif" "Noto Serif" ];
+        sansSerif = [ "DejaVu Sans" "Noto Sans" ];
+        monospace = [ "DejaVu Sans Mono" "Fira Code" ];
+        emoji = [ "Noto Color Emoji" ];
+      };
+      # Enable subpixel rendering and hinting
+      antialias = true;
+      hinting.enable = true;
     };
   };
 
