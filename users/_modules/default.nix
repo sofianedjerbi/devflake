@@ -40,7 +40,7 @@ with lib;
   catppuccin = {
     enable = true;
     flavor = "mocha";
-    accent = "lavender";
+    accent = "mauve";
   };
 
   # Default program associations

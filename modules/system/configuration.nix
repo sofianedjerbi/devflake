@@ -16,7 +16,7 @@
       enable = true;  # Needed for input driver support
       xkb = {
         layout = "us";
-        variant = "intl";
+        variant = "altgr-intl";
       };
     };
     

@@ -45,7 +45,7 @@ in {
   # === Hyprland Configuration ================================================
   myHyprland = {
     enable = true;
-    wallpaper = ../../resources/wallpapers/nixos.png;
+    wallpaper = ../../resources/wallpapers/gradient.png;
     terminal = "kitty";
     launcher = "fuzzel";
   };
