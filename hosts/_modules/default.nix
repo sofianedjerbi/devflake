@@ -125,6 +125,7 @@
     fzf
     jq
     tree
+    psmisc
     
     # Development tools
     gcc # Required for compiling some plugins

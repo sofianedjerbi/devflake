@@ -27,6 +27,9 @@ in {
     
     # Import fuzzel configuration
     ../../modules/home/fuzzel
+    
+    # Import brave configuration
+    ../../modules/home/brave
   ];
 
   # === Basic User Information ================================================
@@ -176,4 +179,10 @@ in {
   
   # === Neovim Theme Override ================================================
   myNeovim.theme = "catppuccin";
+  
+  # === Browser Configuration ================================================
+  myBrave = {
+    enable = true;
+    defaultSearchEngine = "Google";
+  };
 } 
