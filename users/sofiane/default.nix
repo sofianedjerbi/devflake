@@ -47,7 +47,7 @@ in {
   # === Hyprland Configuration ================================================
   myHyprland = {
     enable = true;
-    wallpaper = ../../resources/wallpapers/gradient.png;
+    wallpaper = ../../resources/wallpapers/asian-town.png;
     terminal = "kitty";
     launcher = "fuzzel";
   };
