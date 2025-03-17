@@ -30,6 +30,9 @@ in {
     
     # Import brave configuration
     ../../modules/home/brave
+    
+    # Import starship configuration
+    ../../modules/home/starship
   ];
 
   # === Basic User Information ================================================
@@ -165,17 +168,8 @@ in {
     userEmail = userEmail;
   };
 
-  # Terminal prompt
-  programs.starship = {
-    enable = true;
-    settings = {
-      add_newline = true;
-      format = "$username@$hostname $directory $git_branch $character";
-      username = { show_always = true; };
-      directory = { truncate_to_repo = false; };
-      git_branch = { symbol = "🌱 "; };
-    };
-  };
+  # Enable Starship prompt with the modular configuration
+  myStarship.enable = true;
   
   # === Neovim Theme Override ================================================
   myNeovim.theme = "catppuccin";
@@ -183,6 +177,5 @@ in {
   # === Browser Configuration ================================================
   myBrave = {
     enable = true;
-    defaultSearchEngine = "Google";
   };
 } 
