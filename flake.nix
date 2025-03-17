@@ -43,6 +43,10 @@
               (builtins.readDir dir);
         in getSubDirs dir;
       
+      # Custom overlay for our packages
+      overlay = final: prev: 
+        (import ./pkgs { pkgs = prev; }).importAll final;
+      
       # Helper to create NixOS configuration
       mkHost = hostname: nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -66,6 +70,9 @@
           
           # Home Manager integration
           home-manager.nixosModules.home-manager
+          
+          # Custom overlays
+          { nixpkgs.overlays = [ overlay ]; }
         ];
       };
 
@@ -74,6 +81,11 @@
       
       # Find all users
       users = getAllUsers ./users;
+
+      # Configure overlays for homeConfigurations
+      hmOverlays = { config, ... }: {
+        nixpkgs.overlays = [ overlay ];
+      };
     in {
       # === Home Manager Configurations ========================================
       homeConfigurations = nixpkgs.lib.mapAttrs
@@ -93,6 +105,9 @@
               
               # Catppuccin theme (globally configured)
               catppuccin.homeManagerModules.catppuccin
+              
+              # Apply custom overlays
+              hmOverlays
             ];
           })
         users;

@@ -37,7 +37,9 @@ in {
     # === User-specific GUI applications ======================================
     packages = with pkgs; [
       # GUI Applications
-      code-cursor
+      cursor
+      discord
+      obsidian
       spotify
     ];
   };
@@ -89,8 +91,6 @@ in {
   services.dunst = {
     enable = true;
     
-    # Let Catppuccin module handle colors and styling
-    # We just set structural configuration
     settings = {
       global = {
         width = 300;
