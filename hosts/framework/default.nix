@@ -1,13 +1,15 @@
 { config, pkgs, lib, hostname, inputs, usersPath, ... }:
 
 {
-  imports = [
-    # Import system configuration
-    ../../modules/system/configuration.nix
-  ];
-
   # === Host Configuration ====================================================
   networking.hostName = hostname;
+
+  # Override garbage collection settings for this host
+  nix.gc = {
+    automatic = true;
+    dates = "daily";
+    options = lib.mkForce "--delete-older-than 14d";
+  };
 
   # === User Configuration ====================================================
   # Define which users are enabled on this host
@@ -33,7 +35,7 @@
     cpu.amd.updateMicrocode = true;
   };
 
-  # === Framework Laptop Optimizations ========================================
+  # === Framework Laptop Power Optimizations =================================
   # Power management
   services.tlp = {
     enable = true;
@@ -83,16 +85,14 @@
     };
   };
 
-  # Thermal management
+  # Additional power management services
   services.thermald.enable = true;
-  
-  # Battery optimizations
   powerManagement = {
     enable = true;
     powertop.enable = true;
   };
   
-  # Add a powertop auto-tune service
+  # Power optimization auto-tune service
   systemd.services.powertop-auto-tune = {
     description = "Powertop auto tune";
     wantedBy = [ "multi-user.target" ];
@@ -103,7 +103,7 @@
     };
   };
 
-  # Enhanced power saving options
+  # CPU frequency management
   services.auto-cpufreq = {
     enable = true;
     settings = {
@@ -130,7 +130,7 @@
     ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="0000", ATTR{idProduct}=="0000", ATTR{power/control}="auto"
   '';
   
-  # Deep sleep
+  # Deep sleep and other kernel parameters
   boot.kernelParams = [ 
     "mem_sleep_default=deep" 
     # Kernel parameters for power saving
@@ -140,51 +140,11 @@
     "i915.enable_psr=1" # For Intel graphics, remove if AMD
   ];
   
-  # Screen brightness control with automatic dimming
+  # Screen brightness control
   programs.light.enable = true;
   
-  # Hyprland configuration with power optimizations
-  programs.hyprland = {
-    enable = true;
-    xwayland.enable = true;
-  };
-  
-  # === Desktop Environment ===================================================
-  # Login manager
-  services.greetd = {
-    enable = true;
-    settings = {
-      default_session = {
-        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --remember --cmd Hyprland";
-        user = "greeter";
-      };
-    };
-  };
-
-  # === Host-specific Packages ================================================
+  # === Framework-specific Packages ==========================================
   environment.systemPackages = with pkgs; [
-    # Required for Hyprland
-    greetd.tuigreet
-    waybar
-    wofi
-    wl-clipboard
-    swaylock
-    swayidle
-    kitty
-    fuzzel
-    dunst
-    grim
-    slurp
-    wlogout  # Added for power menu integration
-    
-    # File management tools
-    yazi # Terminal file manager
-    file # File type detection
-    unar # Archive extraction
-    ffmpegthumbnailer # Video thumbnails
-    poppler # PDF support
-    fd # Fast find alternative
-    
     # Framework-specific utilities
     powertop
     fwupd
@@ -194,17 +154,4 @@
     power-profiles-daemon
     acpi
   ];
-
-  # === Wayland/XDG Configuration =============================================
-  xdg.portal = {
-    enable = true;
-    extraPortals = with pkgs; [
-      xdg-desktop-portal-wlr
-      xdg-desktop-portal-gtk
-    ];
-  };
-  
-  # Auto-mount removable media
-  services.gvfs.enable = true;
-  services.udisks2.enable = true;
 } 

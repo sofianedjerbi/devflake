@@ -5,6 +5,7 @@
     # Import common options and home-manager configuration
     ./options.nix
     ./home-manager.nix
+    ./desktop-environment.nix
   ];
 
   # === Common NixOS settings for all hosts ===================================
@@ -25,6 +26,21 @@
       dates = lib.mkDefault "weekly";
       options = lib.mkDefault "--delete-older-than 30d";
     };
+  };
+
+  # === Display Server Configuration =========================================
+  services = {
+    # Enable X server for input drivers
+    xserver = {
+      enable = true;  # Needed for input driver support
+      xkb = {
+        layout = "us";
+        variant = "altgr-intl";
+      };
+    };
+    
+    # Enable libinput for touchpad/mouse support
+    libinput.enable = true;  # Touchpad support
   };
 
   # Allow unfree packages globally

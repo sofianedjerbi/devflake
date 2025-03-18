@@ -11,6 +11,10 @@ in {
     ../kitty
     # Import our custom Fuzzel module
     ../fuzzel
+    # Import our custom Hyprlock module
+    ../../system/hyprlock
+    # Import our custom Hypridle module
+    ../../system/hypridle
   ];
 
   options.myHyprland = {
@@ -36,6 +40,10 @@ in {
   };
 
   config = mkIf cfg.enable {
+    # Enable our custom modules
+    myHyprlock.enable = true;
+    myHypridle.enable = true;
+    
     # Enable Hyprland with Catppuccin theming
     wayland.windowManager.hyprland = {
       enable = true;
@@ -51,7 +59,7 @@ in {
         exec-once = [
           "${pkgs.hyprpaper}/bin/hyprpaper"
           "${pkgs.networkmanagerapplet}/bin/nm-applet --indicator"
-          "swayidle -w timeout 120 'hyprctl dispatch dpms off' resume 'hyprctl dispatch dpms on' timeout 180 'swaylock -f' timeout 300 'systemctl suspend' before-sleep 'swaylock -f'"
+          "hypridle"
         ];
         
         # General configuration
@@ -192,7 +200,7 @@ in {
           "$mainMod, E, exec, $terminal --class yazi -e yazi"
           "$mainMod, F, togglefloating,"
           "$mainMod, Space, exec, $launcher"
-          "$mainMod, L, exec, swaylock"
+          "$mainMod, L, exec, hyprlock"
           "$mainMod, V, togglesplit,"
           "$mainMod, P, pseudo,"
           "$mainMod, F11, fullscreen, 0"
@@ -279,8 +287,8 @@ in {
       wl-clipboard
       
       # Screen locking
-      swaylock
-      swayidle
+      hyprlock
+      hypridle
       
       # File manager - using Yazi instead of Thunar
       yazi
@@ -292,10 +300,5 @@ in {
       dunst
       libcanberra # For notification sounds
     ];
-    
-    # Set up Swaylock - Catppuccin module will handle theming
-    programs.swaylock = {
-      enable = true;
-    };
   };
 }
