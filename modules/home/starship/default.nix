@@ -48,7 +48,6 @@ in {
         git_status = {
           style = "bold red";
           format = "[\\[$all_status$ahead_behind\\]]($style) ";
-          when = "(git_state != '') || (git_status != '')";
           modified = "M";
           staged = "S";
           untracked = "?";

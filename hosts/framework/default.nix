@@ -154,4 +154,6 @@
     power-profiles-daemon
     acpi
   ];
+
+  # This value determines the NixOS release from which the default
 } 
