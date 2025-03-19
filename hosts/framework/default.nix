@@ -202,10 +202,13 @@
   # Configure automatic suspend for better battery life
   services.logind = {
     lidSwitch = "suspend-then-hibernate";
+    lidSwitchExternalPower = "lock";  # Lock when lid closed on AC power
     extraConfig = ''
       HandlePowerKey=suspend
       IdleAction=suspend
       IdleActionSec=300
+      LidSwitchIgnoreInhibited=no
+      HoldoffTimeoutSec=10
     '';
   };
   
@@ -218,6 +221,4 @@
     "vm.laptop_mode" = 5;
     "vm.dirty_writeback_centisecs" = 1500;
   };
-
-  # This value determines the NixOS release from which the default
 } 

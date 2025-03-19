@@ -9,34 +9,34 @@ in {
   };
 
   config = mkIf cfg.enable {
-    # Install hypridle package
-    home.packages = with pkgs; [
-      hypridle
-    ];
-    
-    # Create hypridle configuration file
-    xdg.configFile."hypridle/hypridle.conf".text = ''
-      general {
-        lock_cmd = "hyprlock";
-        before_sleep_cmd = "hyprlock";
-        after_sleep_cmd = "hyprctl dispatch dpms on";
-      }
-      
-      listener {
-        timeout = 120
-        on_timeout = "hyprctl dispatch dpms off"
-        on_resume = "hyprctl dispatch dpms on"
-      }
-      
-      listener {
-        timeout = 180
-        on_timeout = "hyprlock"
-      }
-      
-      listener {
-        timeout = 300
-        on_timeout = "systemctl suspend"
-      }
-    '';
+    services.hypridle = {
+      enable = true;
+      settings = {
+        general = {
+          lock_cmd = "${lib.getExe pkgs.hyprlock}";
+          before_sleep_cmd = "${lib.getExe pkgs.hyprlock}";
+          after_sleep_cmd = "${pkgs.hyprland}/bin/hyprctl dispatch dpms on";
+        };
+
+        listener = [
+          # Turn off screen after 2 minutes of inactivity
+          {
+            timeout = 120;
+            on-timeout = "${pkgs.hyprland}/bin/hyprctl dispatch dpms off";
+            on-resume = "${pkgs.hyprland}/bin/hyprctl dispatch dpms on";
+          }
+          # Lock screen after 3 minutes of inactivity
+          {
+            timeout = 180;
+            on-timeout = "${lib.getExe pkgs.hyprlock}";
+          }
+          # Suspend after 5 minutes of inactivity
+          {
+            timeout = 300;
+            on-timeout = "${pkgs.systemd}/bin/systemctl suspend";
+          }
+        ];
+      };
+    };
   };
 } 
