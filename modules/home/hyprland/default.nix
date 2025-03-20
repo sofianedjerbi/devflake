@@ -104,17 +104,20 @@ in {
           enabled = true;
           
           bezier = [
-            "myBezier, 0.05, 0.9, 0.1, 1.05"
-            "easeOut, 0.36, 0, 0.66, -0.56"
+            "easeOut, 0.27, 0, 0.38, 1"
             "easeIn, 0.12, 0.8, 0.4, 1"
+            "gentle, 0.33, 1, 0.68, 1"
+            "bounce, 0.1, 1.1, 0.2, 1.05"
           ];
           
           animation = [
-            "windows, 1, 5, myBezier"      # Reduced animation time
-            "windowsOut, 1, 5, default, popin 80%"
-            "border, 1, 8, default"
-            "fade, 1, 5, default"          # Faster fading
-            "workspaces, 1, 4, easeOut, slide"
+            "windows, 1, 3, bounce"
+            "windowsOut, 1, 3, easeOut, popin 80%"
+            "windowsMove, 1, 3, gentle"
+            "border, 1, 5, easeOut"
+            "fade, 1, 3, easeIn" 
+            "workspaces, 1, 3, gentle, slide"
+            "layers, 1, 3, easeIn, slide"
           ];
         };
         
