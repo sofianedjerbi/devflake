@@ -209,6 +209,14 @@
     mtr
     dig
 
+    # Bluetooth GUI utilities
+    blueman
+    
+    # Logitech device utilities
+    solaar       # Logitech Unifying Receiver configuration tool
+    piper        # GTK application for configuring gaming mice
+    libratbag    # DBus daemon for configuring gaming mice
+    
     # Bootloader
     limine
 
@@ -241,6 +249,31 @@
     
     # Time synchronization
     timesyncd.enable = true;
+    
+    # Enable ratbagd for gaming mice configuration
+    ratbagd.enable = true;
+  };
+
+  # Hardware settings
+  hardware = {
+    # Bluetooth settings
+    bluetooth = {
+      enable = true;
+      powerOnBoot = true;
+      settings = {
+        General = {
+          Enable = "Source,Sink,Media,Socket";
+        };
+      };
+    };
+    
+    # Logitech device support
+    logitech = {
+      wireless = {
+        enable = true;
+        enableGraphical = true;  # Enable Solaar GUI
+      };
+    };
   };
   
   # Console settings

@@ -59,6 +59,8 @@ in {
         exec-once = [
           "${pkgs.hyprpaper}/bin/hyprpaper"
           "${pkgs.networkmanagerapplet}/bin/nm-applet --indicator"
+          "${pkgs.blueman}/bin/blueman-applet"
+          "${pkgs.solaar}/bin/solaar --window=hide"
           "hypridle"
         ];
         
