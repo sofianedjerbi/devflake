@@ -48,12 +48,58 @@
 
   # Default boot settings
   boot = {
+    # Add terminal color parameters to the kernel command line
+    kernelParams = [
+      # Catppuccin Mocha color palette for virtual terminal
+      "vt.default_red=30,243,166,249,137,245,148,186,88,243,166,249,137,245,148,166"
+      "vt.default_grn=30,139,227,226,180,194,226,194,91,139,227,226,180,194,226,173"
+      "vt.default_blu=46,168,161,175,250,231,213,222,112,168,161,175,250,231,213,200"
+    ];
+
     loader = {
-      systemd-boot = {
-        enable = true;
-        configurationLimit = 10;
+      # Disable other bootloaders to avoid conflicts
+      systemd-boot.enable = false;
+      grub.enable = false;
+      
+      efi = {
+        canTouchEfiVariables = true;
+        efiSysMountPoint = "/boot";
       };
-      efi.canTouchEfiVariables = true;
+      
+      # Disable unused bootloaders
+      generic-extlinux-compatible.enable = false;
+      
+      # Configure Limine bootloader
+      limine = {
+        enable = true;
+        efiSupport = true;
+        biosSupport = false;
+        
+        # Configure EFI installation behavior
+        efiInstallAsRemovable = true;  # Install as removable for more compatibility
+        
+        # Max number of generations in boot menu
+        maxGenerations = 10;
+        
+        # Allow editing boot entries (useful for troubleshooting)
+        enableEditor = true;
+        
+        # Catppuccin Mocha color palette configuration - no wallpaper or branding
+        style = {
+          # Explicitly set empty wallpapers
+          wallpapers = [];
+          backdrop = "1e1e2e"; # Match background color
+          
+          graphicalTerminal = {
+            palette = "1e1e2e;f38ba8;a6e3a1;f9e2af;89b4fa;f5c2e7;94e2d5;cdd6f4";
+            brightPalette = "585b70;f38ba8;a6e3a1;f9e2af;89b4fa;f5c2e7;94e2d5;cdd6f4";
+            background = "1e1e2e";
+            foreground = "cdd6f4";
+            brightBackground = "585b70";
+            brightForeground = "cdd6f4";
+          };
+        };
+      };
     };
     # Use the latest kernel
     kernelPackages = pkgs.linuxPackages_latest;
@@ -162,6 +208,9 @@
     inetutils
     mtr
     dig
+
+    # Bootloader
+    limine
 
     # Catppuccin theme-related packages
     papirus-icon-theme
