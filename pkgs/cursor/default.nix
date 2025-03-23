@@ -4,8 +4,8 @@
 
   src = pkgs.fetchurl {
     # URL to download the Cursor AppImage
-    url = "https://downloads.cursor.com/production/client/linux/x64/appimage/Cursor-0.47.5-53d6da1322f934a1058e7569ee0847b24879d18c.deb.glibc2.25-x86_64.AppImage";
-    hash = "sha256-ajs/Wk5oSi+xf1zWB0fOCJ0SvuW5exB6jj7+Cj5vWDs=";
+    url = "https://downloads.cursor.com/production/b6fb41b5f36bda05cab7109606e7404a65d1ff32/linux/x64/Cursor-0.47.9-x86_64.AppImage";
+    hash = "sha256-L0ZODGHmO8SDhqrnkq7jwi30c6l+/ESj+FXHVKghsfc=";
   };
   appimageContents = pkgs.appimageTools.extract {inherit pname version src;};
 in
