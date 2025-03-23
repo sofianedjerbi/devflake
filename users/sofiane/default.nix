@@ -1,7 +1,7 @@
 { config, pkgs, lib, inputs, username ? null, ... }:
 
 let
-  # User information
+  # Dynamic username resolution with fallbacks
   actualUsername = if username != null then username 
                    else if config.home.username or null != null then config.home.username
                    else "sofiane";
@@ -10,35 +10,28 @@ let
   homeDir = "/home/${actualUsername}";
 in {
   imports = [
-    # Import common user settings
+    # Common user settings from _modules
     ../_modules/default.nix
-    
-    # Import catppuccin module
     inputs.catppuccin.homeManagerModules.catppuccin
-    
-    # Import brave configuration
     ../../modules/home/brave
-    
-    # Import starship configuration
     ../../modules/home/starship
   ];
 
-  # === Basic User Information ================================================
+  # Basic user configuration
   home = {
     username = actualUsername;
     homeDirectory = homeDir;
     
-    # === User-specific GUI applications ======================================
     packages = with pkgs; [
-      # GUI Applications
       cursor
       discord
       obsidian
       spotify
+      shell-gpt
     ];
   };
 
-  # === Desktop Environment Configuration =====================================
+  # Desktop environment
   myDesktop = {
     enable = true;
     type = "hyprland";
@@ -47,25 +40,22 @@ in {
     launcher = "fuzzel";
   };
   
-  # === Waybar Configuration ==================================================
+  # UI components configuration
   myWaybar = {
     enable = true;
     position = "top";
   };
   
-  # === Kitty Configuration ==================================================
   myKitty = {
     enable = true;
     fontSize = 12;
     opacity = "1.0";
     extraSettings = {
-      # Any additional custom settings can go here
       cursor_blink_interval = "0.5";
       cursor_shape = "beam";
     };
   };
   
-  # === Fuzzel Configuration =================================================
   myFuzzel = {
     enable = true;
     font = "JetBrains Mono";
@@ -73,16 +63,15 @@ in {
     width = 20;
     borderRadius = 10;
     backgroundOpacity = "ee";  # ~93% opacity
-    showIcons = false;         # Elegant look without icons
+    showIcons = false;
     animation = "zoom";
     extraConfig = {
       main = {
-        prompt = " ";         # Simple prompt character
+        prompt = " ";
       };
     };
   };
   
-  # === Dunst Configuration ==================================================
   myDunst = {
     enable = true;
     width = 300;
@@ -95,24 +84,19 @@ in {
     font = "JetBrains Mono 10";
   };
   
-  # === User-specific Configurations ==========================================
-  
-  # Enable zsh for this user
+  # Shell and development tools
   programs.zsh.enable = true;
 
-  # User-specific git information
   programs.git = {
     userName = userFullName;
     userEmail = userEmail;
   };
 
-  # Enable Starship prompt with the modular configuration
   myStarship.enable = true;
   
-  # === Neovim Theme Override ================================================
+  # Theme and app settings
   myNeovim.theme = "catppuccin";
   
-  # === Browser Configuration ================================================
   myBrave = {
     enable = true;
   };

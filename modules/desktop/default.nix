@@ -6,7 +6,7 @@ let
   cfg = config.myDesktop;
 in {
   imports = [
-    # Import our desktop components
+    # Desktop components
     ./hyprland
     ./waybar
     ./kitty
@@ -47,7 +47,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    # Enable appropriate desktop components based on desktop type
+    # Enable desktop components based on selected type
     myHyprland = mkIf (cfg.type == "hyprland") {
       enable = true;
       wallpaper = cfg.wallpaper;
@@ -55,7 +55,7 @@ in {
       launcher = cfg.launcher;
     };
     
-    # Always enable these components when desktop is enabled
+    # Core desktop components
     myWaybar.enable = true;
     myKitty.enable = true;
     myFuzzel.enable = true;

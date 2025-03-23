@@ -40,47 +40,39 @@ in {
   };
 
   config = mkIf cfg.enable {
-    # Set Neovim as default editor if requested
+    # Set environment variables if defaultEditor is enabled
     home.sessionVariables = mkIf cfg.defaultEditor {
       EDITOR = "nvim";
       VISUAL = "nvim";
     };
     
-    # Basic Neovim configuration
     programs.neovim = {
       enable = true;
       defaultEditor = cfg.defaultEditor;
       
-      # Packages needed for our configuration
       extraPackages = with pkgs; [
-        # Core dependencies
-        (lib.mkIf (builtins.elem "lsp" cfg.plugins) nil)                           # Nix LSP
-        
-        # Core utilities for Telescope and other plugins
-        (lib.mkIf (builtins.elem "telescope" cfg.plugins) ripgrep)                 # Fast grep for telescope
-        (lib.mkIf (builtins.elem "telescope" cfg.plugins) fd)                      # Fast find for telescope
+        (lib.mkIf (builtins.elem "lsp" cfg.plugins) nil)                   # Nix LSP
+        (lib.mkIf (builtins.elem "telescope" cfg.plugins) ripgrep)         # Fast grep for telescope
+        (lib.mkIf (builtins.elem "telescope" cfg.plugins) fd)              # Fast find for telescope
       ];
       
       plugins = with pkgs.vimPlugins; [
-        # Core plugins - always enabled
+        # Core plugins
         plenary-nvim
         which-key-nvim
         
-        # Using Catppuccin theme provided by the Nix module
+        # Feature-specific plugins
         (lib.mkIf (builtins.elem "statusline" cfg.plugins) lualine-nvim)
         (lib.mkIf (builtins.elem "telescope" cfg.plugins) telescope-nvim)
         (lib.mkIf (builtins.elem "treesitter" cfg.plugins) {
           plugin = nvim-treesitter;
           type = "lua";
-          # Install treesitter with all grammars with Nix
           config = ''
             require('nvim-treesitter.configs').setup {
               ensure_installed = { "lua", "nix", "javascript" },
               highlight = { enable = true },
-              -- Use a local parser directory in the XDG cache directory
               parser_install_dir = vim.fn.stdpath('cache') .. '/treesitter',
             }
-            -- Add the custom parser installation path to runtimepath
             vim.opt.runtimepath:append(vim.fn.stdpath('cache') .. '/treesitter')
           '';
         })
@@ -112,8 +104,6 @@ in {
         vim.keymap.set('n', '<leader>w', '<cmd>write<cr>', { desc = 'Save' })
         vim.keymap.set('n', '<leader>q', '<cmd>quit<cr>', { desc = 'Quit' })
         
-        -- Note: Theme configuration is handled by the Catppuccin Nix module
-        
         ${lib.optionalString (builtins.elem "statusline" cfg.plugins) ''
         -- Status line
         require('lualine').setup {
@@ -137,12 +127,10 @@ in {
         -- LSP Configuration
         local lspconfig = require('lspconfig')
         
-        -- Basic keymaps for LSP
         vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { desc = 'Go to Definition' })
         vim.keymap.set('n', 'K', vim.lsp.buf.hover, { desc = 'Hover Documentation' })
         vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, { desc = 'Rename Symbol' })
         
-        -- Setup for specific LSPs
         lspconfig.nil_ls.setup{}
         ''}
         

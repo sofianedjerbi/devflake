@@ -3,13 +3,11 @@
 with lib;
 {
   imports = [
-    # Import the Neovim module
     ../../modules/home/neovim
-    # Import the Desktop environment module
     ../../modules/desktop
   ];
 
-  # === Common Home Manager settings for all users ============================
+  # Core Home Manager settings
   home = {
     stateVersion = "24.11";
     
@@ -19,7 +17,6 @@ with lib;
       psmisc
     ];
     
-    # Environment variables
     sessionVariables = {
       EDITOR = "nvim";
       SHELL = "${pkgs.zsh}/bin/zsh";
@@ -27,10 +24,10 @@ with lib;
     };
   };
   
-  # Set a reasonable font configuration
+  # Font configuration
   fonts.fontconfig.enable = true;
 
-  # XDG base directory specification
+  # XDG directories
   xdg = {
     enable = true;
     userDirs = {
@@ -39,14 +36,14 @@ with lib;
     };
   };
 
-  # Catppuccin theme
+  # Theme configuration
   catppuccin = {
     enable = true;
     flavor = "mocha";
     accent = "mauve";
   };
 
-  # Default program associations
+  # Default applications
   xdg.mimeApps = {
     enable = true;
     defaultApplications = {
@@ -57,7 +54,7 @@ with lib;
     };
   };
 
-  # Common shell configuration
+  # Shell configurations
   programs.bash = {
     enable = true;
     enableCompletion = true;
@@ -68,7 +65,6 @@ with lib;
     };
   };
 
-  # Common zsh configuration (if user enables it)
   programs.zsh = {
     enableCompletion = true;
     syntaxHighlighting.enable = true;
@@ -79,7 +75,7 @@ with lib;
     };
   };
   
-  # Common git configuration (user info set by each user)
+  # Git configuration (user info set in user configs)
   programs.git = {
     enable = true;
     aliases = {
@@ -95,7 +91,7 @@ with lib;
     };
   };
 
-  # Common terminal tools
+  # CLI utilities
   programs.bat = {
     enable = true;
   };
@@ -106,7 +102,7 @@ with lib;
     enableZshIntegration = true;
   };
 
-  # Common SSH configuration
+  # SSH configuration
   programs.ssh = {
     enable = true;
     compression = true;
@@ -114,7 +110,7 @@ with lib;
     controlPersist = "10m";
   };
 
-  # Common cursor and icon themes
+  # Cursor and UI themes
   home.pointerCursor = {
     name = "Adwaita";
     package = pkgs.adwaita-icon-theme;
@@ -122,7 +118,6 @@ with lib;
     x11.enable = true;
   };
 
-  # GTK theme
   gtk = {
     enable = true;
     theme = {
@@ -135,7 +130,7 @@ with lib;
     };
   };
 
-  # File manager configuration - using Yazi (terminal-based)
+  # File manager
   programs.yazi = {
     enable = true;
     enableBashIntegration = true;
@@ -155,10 +150,10 @@ with lib;
     };
   };
 
-  # Silence Home Manager news
+  # Disable Home Manager news
   news.display = "silent";
 
-  # Enable Neovim with our custom configuration for all users
+  # Neovim configuration
   myNeovim = {
     enable = true;
     defaultEditor = true;

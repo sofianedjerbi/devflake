@@ -1,31 +1,27 @@
 {
   description = "DevFlake: Multi-User NixOS Configuration";
 
-  # === Inputs ================================================================
+  # Input sources
   inputs = {
-    # Package sources
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-    # Home Manager
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     
-    # Catppuccin theme integration
     catppuccin = {
       url = "github:catppuccin/nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  # === Outputs ===============================================================
+  # System configuration
   outputs = { self, nixpkgs, home-manager, catppuccin, ... }@inputs:
     let
-      # Helper function for systems
       forAllSystems = nixpkgs.lib.genAttrs [ "x86_64-linux" "aarch64-linux" ];
       
-      # Function to get all hosts
+      # Directory scanning functions
       getAllHosts = dir:
         let
           getSubDirs = dir:
@@ -34,7 +30,6 @@
               (builtins.readDir dir);
         in getSubDirs dir;
 
-      # Function to get all users
       getAllUsers = dir:
         let
           getSubDirs = dir:
@@ -43,11 +38,11 @@
               (builtins.readDir dir);
         in getSubDirs dir;
       
-      # Custom overlay for our packages
+      # Custom packages overlay
       overlay = final: prev: 
         (import ./pkgs { pkgs = prev; }).importAll final;
       
-      # Helper to create NixOS configuration
+      # NixOS configuration builder
       mkHost = hostname: nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = { 
@@ -56,38 +51,25 @@
           usersPath = ./users;
         };
         modules = [
-          # Common system settings
           ./hosts/_modules/default.nix
-
-          # Host-specific hardware configuration
           (./hosts + "/${hostname}/hardware.nix")
-          
-          # Host-specific configuration
           (./hosts + "/${hostname}/default.nix")
-          
-          # Catppuccin theme
           catppuccin.nixosModules.catppuccin
-          
-          # Home Manager integration
           home-manager.nixosModules.home-manager
-          
-          # Custom overlays
           { nixpkgs.overlays = [ overlay ]; }
         ];
       };
 
-      # Find all hosts
+      # Find all hosts and users
       hosts = getAllHosts ./hosts;
-      
-      # Find all users
       users = getAllUsers ./users;
 
-      # Configure overlays for homeConfigurations
+      # Home-manager overlay configuration
       hmOverlays = { config, ... }: {
         nixpkgs.overlays = [ overlay ];
       };
     in {
-      # === Home Manager Configurations ========================================
+      # Home Manager configurations for each user
       homeConfigurations = nixpkgs.lib.mapAttrs
         (username: _:
           home-manager.lib.homeManagerConfiguration {
@@ -97,27 +79,20 @@
               usersPath = ./users;
             };
             modules = [
-              # Common user settings
               ./users/_modules/default.nix
-              
-              # User-specific configuration
               (./users + "/${username}/default.nix")
-              
-              # Catppuccin theme (globally configured)
               catppuccin.homeManagerModules.catppuccin
-              
-              # Apply custom overlays
               hmOverlays
             ];
           })
         users;
           
-      # === NixOS Configurations ==============================================
+      # NixOS configurations for each host
       nixosConfigurations = nixpkgs.lib.mapAttrs
         (hostname: _: mkHost hostname)
         hosts;
       
-      # === Development Shell ================================================
+      # Development environment
       devShells = forAllSystems (system:
         let 
           pkgs = nixpkgs.legacyPackages.${system};
@@ -136,7 +111,7 @@
         }
       );
       
-      # === Formatter ========================================================
+      # Code formatter
       formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixpkgs-fmt);
     };
 }

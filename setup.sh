@@ -2,14 +2,14 @@
 
 set -e
 
-# Colors
+# Terminal colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Function to print colored text
+# Print colored text helper
 print_color() {
   local color=$1
   local text=$2
@@ -55,38 +55,33 @@ add_host() {
 { config, pkgs, lib, hostname, inputs, usersPath, ... }:
 
 let
-  # Define enabled users for this host
   enabledUsers = [
     "sofiane"
-    # Add other users as needed
+    # Add more users here
   ];
 
-  # Convert users list to home-manager configs
   userConfigs = map (username: {
     name = username;
     value = import (usersPath + "/\${username}/default.nix");
   }) enabledUsers;
 in {
   imports = [
-    # Import any host-specific modules here
     ../../modules/system/configuration.nix
   ];
 
-  # === Host-specific settings ================================================
   networking.hostName = hostname;
 
   # Configure users for this host
   home-manager.users = builtins.listToAttrs userConfigs;
 
-  # Add your host-specific configuration here
+  # Host-specific configuration
 }
 EOF
   
-  # Create an empty hardware.nix
+  # Create hardware.nix
   cat > "hosts/$hostname/hardware.nix" << EOF
 # Hardware configuration for $hostname
-# This file should be generated with 'nixos-generate-config --show-hardware-config'
-# and then customized as needed.
+# Generate with: nixos-generate-config --show-hardware-config
 
 { config, lib, pkgs, modulesPath, ... }:
 
@@ -95,8 +90,7 @@ EOF
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
-  # Add your hardware-specific configuration here
-  # Example:
+  # Hardware-specific configuration
   # boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "usbhid" "sd_mod" ];
   # boot.initrd.kernelModules = [ ];
   # boot.kernelModules = [ "kvm-intel" ];
@@ -136,39 +130,31 @@ add_user() {
 { config, pkgs, lib, username, inputs, ... }:
 
 let
-  # Define personal information
   userFullName = "$username";
   userEmail = "$username@example.com";
   homeDir = "/home/\${username}";
 in {
   imports = [
-    # Import user-specific modules here
+    # Add user-specific modules here
   ];
 
-  # === Home Manager Configuration ============================================
   home = {
     inherit username;
     homeDirectory = homeDir;
-    stateVersion = "24.11"; # Do not change after initial setup
+    stateVersion = "24.11"; # Do not change
     
-    # === Packages ============================================================
     packages = with pkgs; [
-      # Terminal utilities
       neofetch
       htop
-      
-      # Add your preferred packages here
+      # Add preferred packages
     ];
     
-    # Environment variables
     sessionVariables = {
       EDITOR = "vim";
     };
   };
 
-  # === Program Configurations ================================================
-  
-  # Shell configuration
+  # Program configurations
   programs.bash = {
     enable = true;
     shellAliases = {
@@ -177,14 +163,11 @@ in {
     };
   };
 
-  # Git configuration
   programs.git = {
     enable = true;
     userName = userFullName;
     userEmail = userEmail;
   };
-
-  # Add more program configurations as needed
 }
 EOF
   
