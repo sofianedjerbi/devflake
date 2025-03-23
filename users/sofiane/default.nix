@@ -16,18 +16,6 @@ in {
     # Import catppuccin module
     inputs.catppuccin.homeManagerModules.catppuccin
     
-    # Import hyprland configuration
-    ../../modules/home/hyprland
-    
-    # Import waybar configuration
-    ../../modules/home/waybar
-    
-    # Import kitty configuration
-    ../../modules/home/kitty
-    
-    # Import fuzzel configuration
-    ../../modules/home/fuzzel
-    
     # Import brave configuration
     ../../modules/home/brave
     
@@ -50,9 +38,10 @@ in {
     ];
   };
 
-  # === Hyprland Configuration ================================================
-  myHyprland = {
+  # === Desktop Environment Configuration =====================================
+  myDesktop = {
     enable = true;
+    type = "hyprland";
     wallpaper = ../../resources/wallpapers/asian-town.png;
     terminal = "kitty";
     launcher = "fuzzel";

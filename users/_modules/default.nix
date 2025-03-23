@@ -5,6 +5,8 @@ with lib;
   imports = [
     # Import the Neovim module
     ../../modules/home/neovim
+    # Import the Desktop environment module
+    ../../modules/desktop
   ];
 
   # === Common Home Manager settings for all users ============================

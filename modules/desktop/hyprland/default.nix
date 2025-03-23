@@ -12,9 +12,9 @@ in {
     # Import our custom Fuzzel module
     ../fuzzel
     # Import our custom Hyprlock module
-    ../../system/hyprlock
+    ../hyprlock
     # Import our custom Hypridle module
-    ../../system/hypridle
+    ../hypridle
   ];
 
   options.myHyprland = {
@@ -263,7 +263,7 @@ in {
           "$mainMod, Print, exec, grim - | wl-copy"
         ];
         
-        # Move/resize windows with mainMod + LMB/RMB and dragging
+        # Mouse bindings
         bindm = [
           "$mainMod, mouse:272, movewindow"
           "$mainMod, mouse:273, resizewindow"
@@ -304,4 +304,4 @@ in {
       libcanberra # For notification sounds
     ];
   };
-}
+} 
