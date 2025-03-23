@@ -8,7 +8,6 @@
     wl-clipboard
     kitty
     fuzzel
-    dunst
     grim  # Screenshot utility
     slurp # Screen area selection
     wlogout

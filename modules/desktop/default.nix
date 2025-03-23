@@ -13,6 +13,7 @@ in {
     ./fuzzel
     ./hyprlock
     ./hypridle
+    ./dunst
   ];
 
   options.myDesktop = {
@@ -58,5 +59,6 @@ in {
     myWaybar.enable = true;
     myKitty.enable = true;
     myFuzzel.enable = true;
+    myDunst.enable = true;
   };
 } 
