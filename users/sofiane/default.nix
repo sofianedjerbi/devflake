@@ -28,6 +28,10 @@ in {
       obsidian
       spotify
       shell-gpt
+      awscli2
+      terragrunt
+      terraform
+      python313
     ];
   };
 

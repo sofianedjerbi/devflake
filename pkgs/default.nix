@@ -4,4 +4,4 @@
   importAll = self: {
     cursor = self.callPackage ./cursor {};
   };
-} 
+}
