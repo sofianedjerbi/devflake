@@ -9,6 +9,18 @@ in {
   };
 
   config = mkIf cfg.enable {
+    wayland.windowManager.hyprland.settings = {
+      exec-once = [
+        # don't idle while playing audio
+        "sway-audio-idle-inhibit"
+      ];
+    };
+
+    home.packages = with pkgs; [
+      hypridle
+      sway-audio-idle-inhibit
+    ];
+
     services.hypridle = {
       enable = true;
       settings = {
@@ -16,6 +28,7 @@ in {
           lock_cmd = "${lib.getExe pkgs.hyprlock}";
           before_sleep_cmd = "${lib.getExe pkgs.hyprlock}";
           after_sleep_cmd = "${pkgs.hyprland}/bin/hyprctl dispatch dpms on";
+          ignore_dbus_inhibit = false;
         };
 
         listener = [

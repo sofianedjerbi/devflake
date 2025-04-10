@@ -290,11 +290,7 @@ in {
       grim
       slurp
       wl-clipboard
-      
-      # Screen locking
-      hyprlock
-      hypridle
-      
+
       # File manager - using Yazi instead of Thunar
       yazi
       
