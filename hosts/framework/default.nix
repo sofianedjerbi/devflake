@@ -22,7 +22,7 @@
   users.users.sofiane = {
     isNormalUser = true;
     description = "Sofiane Djerbi";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
     shell = pkgs.zsh;
   };
 
@@ -186,7 +186,6 @@
     
     # Battery monitoring and power saving
     upower
-    auto-cpufreq
     s-tui
     
     # System monitoring

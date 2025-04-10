@@ -46,6 +46,12 @@
   # Allow unfree packages globally
   nixpkgs.config.allowUnfree = true;
 
+  # Enable Docker daemon
+  virtualisation.docker = {
+    enable = true;
+    autoPrune.enable = true;
+  };
+
   # Default boot settings
   boot = {
     # Add terminal color parameters to the kernel command line
@@ -208,6 +214,9 @@
     inetutils
     mtr
     dig
+
+    # Container tools
+    docker
 
     # Bluetooth GUI utilities
     blueman

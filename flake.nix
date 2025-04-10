@@ -56,7 +56,10 @@
           (./hosts + "/${hostname}/default.nix")
           catppuccin.nixosModules.catppuccin
           home-manager.nixosModules.home-manager
-          { nixpkgs.overlays = [ overlay ]; }
+          { 
+            nixpkgs.overlays = [ overlay ];
+            nixpkgs.config.allowUnfree = true;
+          }
         ];
       };
 
